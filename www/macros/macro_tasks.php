@@ -8,7 +8,6 @@ require_once(Config::ROOT . "common/db/task.php");
 require_once(Config::ROOT . "common/db/user.php");
 require_once Config::ROOT.'common/db/task_statistics.php';
 require_once(Config::ROOT . "common/round.php");
-require_once(Config::ROOT . "www/macros/macro_stars.php");
 
 function format_score_column($val) {
   if (is_null($val)) {
@@ -27,16 +26,9 @@ function format_progress_column($val) {
 }
 
 function format_rating_column($val) {
-  if (is_null($val)) {
-    return 'N/A';
-  } else {
-    $stars_args = array(
-      'rating' => $val,
-      'scale' => 5,
-      'type' => 'normal'
-    );
-    return macro_stars($stars_args);
-  }
+  $task = Task::get_by_id($val);
+  Smart::assign('task', $task);
+  return Smart::fetch('bits/starRating.tpl');
 }
 
 function format_solved_by_column($row) {
@@ -283,7 +275,7 @@ function macro_tasks($args) {
     $column_infos[] = array(
       'html_title' => 'Dificultate',
       'css_class' => 'rating',
-      'key' => 'rating',
+      'key' => 'id',
       'valform' => 'format_rating_column',
     );
   }

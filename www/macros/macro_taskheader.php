@@ -1,7 +1,5 @@
 <?php
 
-require_once Config::ROOT . 'www/macros/macro_stars.php';
-
 function macro_taskheader($args) {
   $taskId = $args['task_id'] ?? '';
   $task = Task::get_by_id($taskId);

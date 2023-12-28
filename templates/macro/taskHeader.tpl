@@ -64,7 +64,7 @@
         Dificultate
       </th>
       <td>
-        {$task->getDifficulty()}
+        {include "bits/starRating.tpl"}
       </td>
     </tr>
 

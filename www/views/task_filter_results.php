@@ -1,5 +1,4 @@
 <?php
-require_once(Config::ROOT . 'www/macros/macro_stars.php');
 require_once(Config::ROOT . 'www/format/table.php');
 require_once(Config::ROOT . 'www/format/format.php');
 
@@ -22,16 +21,9 @@ function format_score_column($val) {
 }
 
 function format_rating_column($val) {
-    if (is_null($val)) {
-        return 'N/A';
-    } else {
-        $stars_args = array(
-            'rating' => $val,
-            'scale' => 5,
-            'type' => 'normal'
-        );
-        return macro_stars($stars_args);
-    }
+  $task = Task::get_by_id($val);
+  Smart::assign('task', $task);
+  return Smart::fetch('bits/starRating.tpl');
 }
 
 function format_authors($row) {
@@ -122,7 +114,7 @@ $column_infos[] = array(
 $column_infos[] = array(
         'title' => 'Dificultate',
         'css_class' => 'rating',
-        'key' => 'rating',
+        'key' => 'task_id',
         'valform' => 'format_rating_column');
 if ($user_id) {
     $column_infos[] = array (

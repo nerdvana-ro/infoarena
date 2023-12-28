@@ -73,24 +73,6 @@ class Task extends Base {
     return $surt ? (int)$surt->score : null;
   }
 
-  // Returns an HTML formatted star rating.
-  // TODO: factor out star code in a dedicated file.
-  function getDifficulty(): string {
-    if (is_null($this->rating)) {
-      return 'N/A';
-    }
-
-    if ($this->security != 'public') {
-      return 'N/A';
-    }
-
-    return macro_stars([
-      'rating' => $this->rating,
-      'scale' => 5,
-      'type' => 'normal',
-    ]);
-  }
-
   function getLargestInputFile(): int {
     $obj = Model::factory('Attachment')
       ->select_expr('max(size)', 'maxSize')
