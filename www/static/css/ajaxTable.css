@@ -18,14 +18,17 @@
   color: red;
 }
 
-.ajax-table th {
+.ajax-table th:not([data-disabled-sort]) {
   cursor: pointer;
 }
 
 .ajax-table .controls {
   align-items: center;
   display: flex;
-  justify-content: end;
+}
+
+.ajax-table .controls .range {
+  flex-grow: 10;
 }
 
 .ajax-table .controls select {

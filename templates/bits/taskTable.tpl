@@ -84,7 +84,11 @@
 
 {if $params->showPagination}
   <div class="controls">
-    <div class=""page-size-selector">
+    <div class="range">
+      rezultatele {$firstResult}-{$lastResult} din {$numResults}
+    </div>
+
+    <div class="page-size-selector">
       Arată
       <select>
         {foreach Config::PAGE_SIZES as $size}
@@ -97,6 +101,7 @@
       </select>
       per pagină
     </div>
+
     {include "bits/pagination.tpl" n=$numPages k=$params->pageNo}
   </div>
 {/if}

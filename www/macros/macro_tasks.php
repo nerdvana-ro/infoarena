@@ -50,6 +50,7 @@ function macro_tasks($args) {
   $params->sortAsc = true;
 
   $table = new TaskTable($params);
+  $table->run();
   $taskTableHtml = $table->getHtml();
 
   Smart::assign([

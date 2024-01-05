@@ -24,6 +24,7 @@ function ajax_run(): void {
     $response['error'] = 'Valoare incorectă pentru parametrul „roundId”.';
   } else {
     $table = new TaskTable($params);
+    $table->run();
     $response['html'] = $table->getHtml();
   }
 

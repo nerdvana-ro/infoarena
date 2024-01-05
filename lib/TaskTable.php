@@ -9,6 +9,8 @@ class TaskTable {
 
   private TaskTableParams $params;
   private ORMWrapper $query;
+  private int $numResults;
+  private array $tasks;
 
   function __construct(TaskTableParams $params) {
     $this->params = $params;
@@ -18,8 +20,19 @@ class TaskTable {
     $this->params->showScores &=
       Identity::isLoggedIn() &&
       Identity::mayViewRoundScores($round->as_array());
+  }
 
+  function run(): void {
     $this->prepareQuery();
+    $this->addAttemptedFilter();
+    $this->numResults = $this->query->count();
+
+    // Cannot reuse $this->query because count() sets limits.
+    $this->prepareQuery();
+    $this->addAttemptedFilter();
+    $this->addSortOrder();
+    $this->addPagination();
+    $this->tasks = $this->query->find_many();
   }
 
   private function prepareQuery(): void {
@@ -35,8 +48,6 @@ class TaskTable {
       ->join('ia_round_task', [ 't.id', '=', 'rt.task_id' ], 'rt')
       ->raw_join('left join ia_score_user_round_task', $joinClause, 's')
       ->where('rt.round_id', $this->params->roundId);
-
-    $this->addAttemptedFilter();
   }
 
   private function addAttemptedFilter(): void {
@@ -69,34 +80,34 @@ class TaskTable {
     }
   }
 
-  private function count(): int {
-    $clone = clone $this->query;
-    return $clone->count();
-  }
-
   function getPageCount(): int {
     if ($this->params->showPagination) {
-      $c = $this->count();
-      return ceil($c / $this->params->pageSize);
+      return ceil($this->numResults / $this->params->pageSize);
     } else {
       return 1;
     }
   }
 
+  function getFirstResult() {
+    return ($this->params->pageNo - 1) * $this->params->pageSize + 1;
+  }
+
+  function getLastResult() {
+    return $this->getFirstResult() + count($this->tasks) - 1;
+  }
+
   function getTasks(): array {
-    $this->addSortOrder();
-    $this->addPagination();
-    return $this->query->find_many();
+    return $this->tasks;
   }
 
   function getHtml(): string {
-    $numPages = $this->getPageCount();
-    $tasks = $this->getTasks();
-
     Smart::assign([
-      'tasks' => $tasks,
+      'firstResult' => $this->getFirstResult(),
+      'lastResult' => $this->getLastResult(),
+      'numPages' => $this->getPageCount(),
+      'numResults' => $this->numResults,
       'params' => $this->params,
-      'numPages' => $numPages,
+      'tasks' => $this->tasks,
     ]);
     return Smart::fetch('bits/taskTable.tpl');
   }
