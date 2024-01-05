@@ -23,7 +23,7 @@ class ScoreUserRound extends Base {
       ->find_array();
   }
 
-  // Returns a map of roundId => userId => score
+  // Returns a map of userId => roundId => score
   static function loadByRoundIds(array $roundIds): array {
     $records = Model::factory('ScoreUserRound')
       ->where_in('round_id', $roundIds)
@@ -31,7 +31,7 @@ class ScoreUserRound extends Base {
 
     $results = [];
     foreach ($records as $rec) {
-      $results[$rec->round_id][$rec->user_id] = (float)$rec->score;
+      $results[$rec->user_id][$rec->round_id] = (float)$rec->score;
     }
     return $results;
   }

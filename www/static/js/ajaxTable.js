@@ -16,16 +16,14 @@ $(function() {
     var pageSize = div.find('select').val() ?? 0;
 
     var data = {
-      attempted: div.data('attempted'),
       columns: columns,
       pageSize: pageSize,
       pageNo: table.data('pageNo'),
-      roundId: div.data('roundId'),
       showPagination: table.data('showPagination'),
       sortField: table.data('sortField'),
       sortAsc: table.data('sortAsc'),
-      userId: div.data('userId'),
     };
+    Object.assign(data, div.data());
 
     $.ajax({
       url: url,

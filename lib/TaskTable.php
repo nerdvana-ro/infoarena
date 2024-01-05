@@ -99,10 +99,6 @@ class TaskTable {
     return $this->getFirstResult() + count($this->tasks) - 1;
   }
 
-  function getTasks(): array {
-    return $this->tasks;
-  }
-
   function getHtml(): string {
     Smart::assign([
       'firstResult' => $this->getFirstResult(),

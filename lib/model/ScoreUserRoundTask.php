@@ -15,16 +15,17 @@ class ScoreUserRoundTask extends Base {
     score_update($this->user_id, $this->task_id, $this->round_id, $score);
   }
 
-  // Returns a map of roundId => taskId => userId => score. We keep both the
+  // Returns a map of userId => roundId => taskId => score. We keep both the
   // roundId and taskId in case multiple rounds use the same task.
-  static function loadByRoundIds(array $roundIds): array {
+  static function loadByRoundIdsUserIds(array $roundIds, array $userIds): array {
     $records = Model::factory('ScoreUserRoundTask')
       ->where_in('round_id', $roundIds)
+      ->where_in('user_id', $userIds)
       ->find_many();
 
     $results = [];
     foreach ($records as $rec) {
-      $results[$rec->round_id][$rec->task_id][$rec->user_id] = (float)$rec->score;
+      $results[$rec->user_id][$rec->round_id][$rec->task_id] = (float)$rec->score;
     }
     return $results;
   }
