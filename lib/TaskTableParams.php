@@ -24,6 +24,7 @@ class TaskTableParams {
   public int $userId;
   public int $attempted;
 
+  public string $cssClass;
   public bool $showNumbers;
   public bool $showRatings;
   public bool $showSolvedBy;

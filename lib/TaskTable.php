@@ -47,7 +47,7 @@ class TaskTable {
       ->table_alias('t')
       ->select('t.*')
       ->select('s.score')
-      ->select_expr('row_number() over(order by rt.order_id)', 'number')
+      ->select('rt.order_id', 'number')
       ->join('ia_round_task', [ 't.id', '=', 'rt.task_id' ], 'rt')
       ->raw_join('left join ia_score_user_round_task', $joinClause, 's')
       ->where('rt.round_id', $this->params->roundId);

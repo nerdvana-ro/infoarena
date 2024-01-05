@@ -261,12 +261,6 @@ function controller_round_task_order($round_id) {
     // Parse the values
     $task_order = array_map("intval", $task_order_strings);
 
-    // Increment by 1
-    foreach ($task_order as &$order_id) {
-      $order_id += 1;
-    }
-    unset($order_id);
-
     // Get the tasks
     $first = min($task_order) - 1;
     $count = count($task_order);
@@ -295,6 +289,8 @@ function controller_round_task_order($round_id) {
 
       $current_id += 1;
     }
+
+    redirect(url_round_edit_task_order($round_id));
   }
 
   // Create view.

@@ -16,12 +16,14 @@ function macro_tasks($args) {
     return '';
   }
 
-  $showFilters = $round->isArchive();
+  $showFilters = $round->isArchive() &&
+    get_bool_arg($args, 'show_perspective_form', true);
   $showNumbers = get_bool_arg($args, 'show_numbers');
   $showRatings = get_bool_arg($args, 'show_ratings');
   $showSolvedBy = get_bool_arg($args, 'show_solved_by');
   $showScores = get_bool_arg($args, 'score');
   $showPagination = get_bool_arg($args, 'pagination');
+  $cssClass = $args['css_class'] ?? '';
 
   if ($showScores) {
     $asUsername = Request::get('as_username');
@@ -39,6 +41,7 @@ function macro_tasks($args) {
   $params->roundId = $roundId;
   $params->userId = $perspectiveUserId;
   $params->attempted = $attempted;
+  $params->cssClass = $cssClass;
   $params->showNumbers = $showNumbers;
   $params->showRatings = $showRatings;
   $params->showSolvedBy = $showSolvedBy;

@@ -1,5 +1,5 @@
 <table
-  class="alternating-colors tasks"
+  class="alternating-colors tasks {$params->cssClass}"
   data-show-pagination="{$params->showPagination}"
   data-page-no="{$params->pageNo}"
   data-sort-field="{$params->sortField}"

@@ -7,6 +7,7 @@ function ajax_run(): void {
   $params->roundId = Request::get('roundId');
   $params->userId = Request::get('userId');
   $params->attempted = Request::get('attempted');
+  $params->cssClass = ''; // not used here
   $params->showNumbers = in_array('number', $columns);
   $params->showRatings = in_array('rating', $columns);
   $params->showSolvedBy = in_array('solved_by', $columns);

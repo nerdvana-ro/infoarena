@@ -3,42 +3,29 @@
 require_once __DIR__ . '/../../common/round.php';
 require_once __DIR__ . '/../format/form.php';
 require_once __DIR__ . '/round_edit_header.php';
-require_once __DIR__ . '/..//macros/macro_tasks.php';
+require_once __DIR__ . '/../macros/macro_tasks.php';
 require_once __DIR__ . '/header.php';
 
 echo round_edit_tabs($view['round_id'], 'round-edit-task-order');
 ?>
 
 <script>
-    function do_post() {
-        var formElem = document.task_order_form;
+  function do_post() {
+    var numbers = $('table.tasks tbody tr td.number')
+      .map(function() {
+        return $(this).text().trim();
+      })
+      .get()
+      .join(';');
 
-        var tables = formElem.getElementsByTagName('table');
-        if (tables.length == 0) {
-            formElem.submit();
-        }
-        var table = tables[0];
-
-        var tbodies = table.getElementsByTagName('tbody');
-        if (tbodies.length == 0) {
-            formElem.submit();
-        }
-        var tbody = tbodies[0];
-
-        var rows = tbody.getElementsByTagName('tr');
-        if (rows.length == 0) {
-            formElem.submit();
-        }
-
-        var order_id_list = '';
-        for (var i = 0; i < rows.length; ++i) {
-            var td = rows[i].childNodes[0];
-            order_id_list += (i > 0 ? ';' : '') + td.innerHTML;
-        }
-
-        formElem.task_order.value = order_id_list;
-        formElem.submit();
+    if (numbers) {
+      var formElem = document.task_order_form;
+      formElem.task_order.value = numbers;
+      formElem.submit();
+    } else {
+      return false;
     }
+  }
 </script>
 
 <h1>Editare ordine probleme <?= format_link(url_textblock($round['page_name']), $round['title']) ?></h1>
@@ -50,7 +37,7 @@ echo round_edit_tabs($view['round_id'], 'round-edit-task-order');
 <?php
 $args = array(
     'round_id' => $view['round_id'],
-    'drag_and_drop' => true,
+    'css_class' => 'dragndrop',
     'show_numbers' => true,
     'show_ratings' => true,
     'show_perspective_form' => false,
