@@ -114,6 +114,11 @@ body#infoarena {
   visibility: hidden;
 }
 
+.deemph {
+  color: gray;
+  font-size: .7em;
+}
+
 .hollyfix {
   height: 1%;
 }
@@ -191,6 +196,8 @@ span.access-key {
 
 /* star ratings */
 span.star-rating {
+  color: gray;
+  font-size: .7em;
   white-space: nowrap;
 }
 

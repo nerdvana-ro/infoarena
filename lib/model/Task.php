@@ -42,6 +42,10 @@ class Task extends Base {
       ->find_many();
   }
 
+  function getAuthors(): array {
+    return $this->getTags('author');
+  }
+
   function getMemoryLimit(): int {
     $p = Parameter::getTaskParameter($this->id, 'memlimit');
     return (int)($p->value ?? 0);

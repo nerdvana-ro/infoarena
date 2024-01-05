@@ -36,6 +36,10 @@ class Round extends Base {
     return Identity::ownsRound($this);
   }
 
+  function isArchive(): bool {
+    return $this->type == 'archive';
+  }
+
   static function deleteById(string $roundId): void {
     $round = Round::get_by_id($roundId);
     if (!$round) {

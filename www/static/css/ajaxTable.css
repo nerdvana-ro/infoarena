@@ -1,0 +1,76 @@
+.task-filters {
+  margin: 1.5em 0;
+  padding: 0;
+}
+
+.task-filters select {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  width: 100px;
+}
+
+.task-filters input[type="text"] {
+  margin-left: 0.5em;
+  width: 150px;
+}
+
+.task-filters .error {
+  color: red;
+}
+
+.ajax-table th {
+  cursor: pointer;
+}
+
+.ajax-table .controls {
+  align-items: center;
+  display: flex;
+  justify-content: end;
+}
+
+.ajax-table .controls select {
+  width: 5em;
+}
+
+.ajax-table .page-size-selector {
+  margin-right: 3em;
+}
+
+.pagination {
+  margin: 0;
+  padding-inline-start: 1em;
+}
+
+.pagination li {
+  display: inline;
+  margin-left: 0.3em;
+}
+
+.pagination li.prev {
+  margin-right: 0.5em;
+}
+
+.pagination li.next {
+  margin-left: 0.5em;
+}
+
+.pagination a,
+.pagination span {
+  border-radius: 3px;
+  padding: 0.35em 0.6em;
+}
+
+.pagination a {
+  border: 1px solid #006699;
+  text-decoration: none;
+}
+
+.pagination li.active a {
+  background-color: #006699;
+  color: white;
+}
+
+.pagination span {
+  border: 1px solid #aaa;
+  color: #aaa;
+}

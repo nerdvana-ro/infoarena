@@ -10,8 +10,12 @@ class Request {
     return $_REQUEST[$name] ?? $default;
   }
 
-  static function getFloat(string $name, $default = '') {
+  static function getFloat(string $name, $default = ''): float {
     return (float)self::get($name, $default);
+  }
+
+  static function getBool(string $name, $default = false): bool {
+    return Util::toBool(self::get($name, $default));
   }
 
   static function has(string $name): bool {

@@ -342,12 +342,6 @@ class Identity {
     self::enforce(self::mayViewReports());
   }
 
-  static function mayViewRoundProgress(): bool {
-    return
-      self::isAdmin() ||
-      self::isIntern();
-  }
-
   static function mayViewRoundScores(array $round): bool {
     return
       self::isAdmin() ||

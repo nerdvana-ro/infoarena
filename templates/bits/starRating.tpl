@@ -1,6 +1,6 @@
 {* Mandatory argument: $task *}
 {if !$task->rating || !$task->isPublic()}
-  N/A
+  <span class="deemph">N/A</span>
 {else}
   <span class="star-rating">
     {strip}

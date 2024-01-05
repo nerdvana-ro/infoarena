@@ -21,10 +21,7 @@
         Autor
       </th>
       <td>
-        {foreach $authors as $i => $author}
-          {if $i}•{/if}
-          {include "bits/tagLink.tpl" tag=$author}
-        {/foreach}
+        {include "bits/taskAuthors.tpl"}
       </td>
       <th>
         Adăugată de

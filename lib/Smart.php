@@ -12,6 +12,11 @@ class Smart {
   private static $includedResources = [];
 
   const RESOURCE_MAP = [
+    'ajaxTable' => [
+      'css' => [ 'css/ajaxTable.css' ],
+      'js' => [ 'js/ajaxtable.js' ],
+      'deps' => [ 'jquery' ],
+    ],
     'foreach' => [
       'js' => [ 'js/third-party/foreach.js' ],
     ],
@@ -32,7 +37,7 @@ class Smart {
         'js/roundtimer.js', 'js/submit.js', 'js/tags.js', 'js/time.js',
       ],
       'deps' => [
-        'foreach', 'highlight', 'jquery', 'table-sort', 'tabber', 'tablednd',
+        'foreach', 'highlight', 'jquery', 'tabber', 'tablednd',
       ],
     ],
     'monitor' => [
@@ -45,9 +50,6 @@ class Smart {
     ],
     'tablednd' => [
       'js' => [ 'js/third-party/tablednd.js' ],
-    ],
-    'table-sort' => [
-      'js' => [ 'js/third-party/table-sort.min.js' ],
     ],
   ];
 

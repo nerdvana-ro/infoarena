@@ -52,4 +52,33 @@ class Util {
     return $referrer;
   }
 
+  static function toBool(mixed $x): bool {
+    return filter_var($x, FILTER_VALIDATE_BOOLEAN);
+  }
+
+  /**
+   * Determines the range of page links to display.
+   *
+   * @param int $n Total number of pages
+   * @param int $k Current page
+   * @return int[] An array of two elements, the left and right end of the range.
+   *
+   * Example: $n = 100, $k = 20 => returns [18, 22]
+   */
+  static function getPaginationRange($n, $k) {
+    // By default display two pages left and two pages right of $k
+    $l = max($k - 2, 1);
+    $r = min($k + 2, $n);
+
+    // Extend while needed and while there is room to extend on either side.
+    while (($r - $l < 4) && ($r - $l < $n - 1)) {
+      if ($l == 1) {
+        $r++;
+      } else {
+        $l--;
+      }
+    }
+
+    return [$l, $r];
+  }
 }

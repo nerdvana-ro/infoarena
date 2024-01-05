@@ -719,15 +719,6 @@ ul.htabs {
   white-space: pre;
 }
 
-/* Tasks table */
-table.tasks {
-  line-height: 1.7em;
-}
-
-table.tasks .open_task {
-  float: right;
-}
-
 /* Basic table css */
 table {
   border-collapse: collapse;
@@ -937,54 +928,44 @@ table.monitor {
 }
 
 /* task list */
+table.tasks {
+  line-height: 1.7em;
+}
+
+.tasks td.number, .tasks th.number,
+.tasks td.rating, .tasks th.rating,
+.tasks td.solved_by, .tasks th.solved_by,
 .tasks td.score, .tasks th.score {
 	text-align: center;
-  padding-right: 4pt;
-  width: 10%;
 }
 
-.tasks td.score {
-  color: gray;
-  font-size: .7em;
-}
-
-.tasks td.task {
-  background-position: 3px center;
-  background-repeat: no-repeat;
+.tasks td.title, .tasks th.title {
   padding-left: 23px;
 }
 
-.tasks td.number {
-  width: 5%;
+.tasks td.title {
+  background-position: 3px center;
+  background-repeat: no-repeat;
 }
 
-.tasks td.rating {
-  color: gray;
-  font-size: .7em;
-  padding-left: 4px;
-  width: 10%;
-}
-
-.tasks tr.solved td.task {
+.tasks tr.solved td.title {
   background-image: url('../images/icons/task_solved.gif');
 }
 
-.tasks tr.tried td.task {
-  background-image: url('../images/icons/task_tried.gif');
+.tasks tr.attempted td.title {
+  background-image: url('../images/icons/task_attempted.gif');
 }
 
-.tasks tr.tried td.score, .tasks tr.solved td.score {
-  color: black;
-  font-size: 1em;
+.tasks td.title .flex {
+  display: flex;
+}
+
+.tasks td.title .grow {
+  flex-grow: 10;
 }
 
 #monitor-table, table.tasks  {
 	font-size: 10.4pt;
-}
-
-td.rating, th.rating {
-	text-align: center;
-  width: 2em;
 }
 
 /* pager (paginator) */
