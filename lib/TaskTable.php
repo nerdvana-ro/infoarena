@@ -33,6 +33,9 @@ class TaskTable {
     $this->addSortOrder();
     $this->addPagination();
     $this->tasks = $this->query->find_many();
+
+    $taskIds = array_column($this->tasks, 'id');
+    Preload::loadTaskAuthors($taskIds);
   }
 
   private function prepareQuery(): void {

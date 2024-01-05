@@ -60,7 +60,10 @@
             {/if}
           </div>
         </td>
-        <td>{include "bits/taskAuthors.tpl"}</td>
+        <td>
+          {$authors=Preload::getTaskAuthors($task->id)}
+          {include "bits/taskAuthors.tpl"}
+        </td>
         <td>{$task->source}</td>
         {if $params->showRatings}
           <td class="rating">

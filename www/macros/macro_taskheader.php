@@ -8,7 +8,7 @@ function macro_taskheader($args) {
   }
 
   $owner = User::get_by_id($task->user_id);
-  $authors = $task->getTags('author');
+  $authors = $task->getAuthors();
 
   Smart::assign([
     'authors' => $authors,
