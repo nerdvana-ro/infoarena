@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/../../common/db/attachment.php';
+
 class ReportAttachmentsWithoutFiles extends Report {
 
   // Process the attachment in batches to keep the memory footprint small.
