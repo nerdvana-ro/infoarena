@@ -33,6 +33,7 @@ function macro_rankings($args) {
   $html = $rankings->getHtml();
 
   Smart::assign([
+    'params' => $params,
     'rankingsHtml' => $html,
   ]);
   return Smart::fetch('macro/rankings.tpl');

@@ -203,6 +203,9 @@ class Rankings {
   }
 
   function getHtml(): string {
+    if (empty($this->rows)) {
+      return 'Nicio sursă trimisă la această rundă.';
+    }
     Smart::assign([
       'columns' => $this->columns,
       'firstResult' => $this->getFirstResult(),

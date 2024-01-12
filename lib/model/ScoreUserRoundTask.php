@@ -19,8 +19,8 @@ class ScoreUserRoundTask extends Base {
   // roundId and taskId in case multiple rounds use the same task.
   static function loadByRoundIdsUserIds(array $roundIds, array $userIds): array {
     $records = Model::factory('ScoreUserRoundTask')
-      ->where_in('round_id', $roundIds)
-      ->where_in('user_id', $userIds)
+      ->where_in('round_id', $roundIds ?: [''])
+      ->where_in('user_id', $userIds ?: [0])
       ->find_many();
 
     $results = [];
