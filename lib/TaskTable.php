@@ -5,82 +5,50 @@
  * when loading the page, then via Ajax for subsequent page loads.
  **/
 
-class TaskTable {
+abstract class TaskTable {
 
-  private TaskTableParams $params;
-  private ORMWrapper $query;
+  protected TaskTableParams $params;
   private int $numResults;
   private array $tasks;
 
   function __construct(TaskTableParams $params) {
     $this->params = $params;
-
-    $round = Round::get_by_id($params->roundId);
-
-    $this->params->showScores &=
-      Identity::isLoggedIn() &&
-      Identity::mayViewRoundScores($round->as_array());
   }
 
-  function run(): void {
-    $this->prepareQuery();
-    $this->addAttemptedFilter();
-    $this->numResults = $this->query->count();
+  abstract function buildQuery(): ORMWrapper;
 
-    // Cannot reuse $this->query because count() sets limits.
-    $this->prepareQuery();
-    $this->addAttemptedFilter();
-    $this->addSortOrder();
-    $this->addPagination();
-    $this->tasks = $this->query->find_many();
+  function run(): void {
+    $query = $this->buildQuery();
+    $this->numResults = $query->count();
+
+    $query = $this->buildQuery();
+    $query = $this->addSortOrder($query);
+    $query = $this->addPagination($query);
+    $this->tasks = $query->find_many();
 
     $taskIds = array_column($this->tasks, 'id');
     Preload::loadTaskAuthors($taskIds);
   }
 
-  private function prepareQuery(): void {
-    $joinClause = sprintf(
-      "(s.task_id = t.id and s.round_id = rt.round_id and s.user_id = %s)",
-      $this->params->userId);
+  private function addSortOrder(ORMWrapper $query): ORMWrapper {
+    $field = $this->params->sortField;
+    if (!$field) {
+      return $query;
+    }
 
-    $this->query = Model::factory('Task')
-      ->table_alias('t')
-      ->select('t.*')
-      ->select('s.score')
-      ->select('rt.order_id', 'number')
-      ->join('ia_round_task', [ 't.id', '=', 'rt.task_id' ], 'rt')
-      ->raw_join('left join ia_score_user_round_task', $joinClause, 's')
-      ->where('rt.round_id', $this->params->roundId);
+    return $this->params->sortAsc
+      ? $query->order_by_asc($field)
+      : $query->order_by_desc($field);
   }
 
-  private function addAttemptedFilter(): void {
-    $att = $this->params->attempted;
-    if ($att == TaskTableParams::A_UNTOUCHED) {
-      $this->query = $this->query->where_null('s.score');
-    } else if ($att == TaskTableParams::A_ATTEMPTED) {
-      $this->query = $this->query->where_lt('s.score', 100);
-    } else if ($att == TaskTableParams::A_SOLVED) {
-      $this->query = $this->query->where('s.score', 100);
+  private function addPagination(ORMWrapper $query): ORMWrapper {
+    if (!$this->params->showPagination) {
+      return $query;
     }
-  }
 
-  private function addSortOrder(): void {
-    if ($this->params->sortField) {
-      $field = $this->params->sortField;
-      if ($this->params->sortAsc) {
-        $this->query = $this->query->order_by_asc($field);
-      } else {
-        $this->query = $this->query->order_by_desc($field);
-      }
-    }
-  }
-
-  private function addPagination(): void {
-    if ($this->params->showPagination) {
-      $this->query = $this->query
-        ->limit($this->params->pageSize)
-        ->offset(($this->params->pageNo - 1) * $this->params->pageSize);
-    }
+    return $query
+      ->limit($this->params->pageSize)
+      ->offset(($this->params->pageNo - 1) * $this->params->pageSize);
   }
 
   function getPageCount(): int {

@@ -37,7 +37,7 @@ function macro_tasks($args) {
 
   $attempted = Request::get('attempted', 0);
 
-  $params = new TaskTableParams();
+  $params = new RoundTaskTableParams();
   $params->roundId = $roundId;
   $params->userId = $perspectiveUserId;
   $params->attempted = $attempted;
@@ -52,7 +52,7 @@ function macro_tasks($args) {
   $params->sortField = 'number';
   $params->sortAsc = true;
 
-  $table = new TaskTable($params);
+  $table = new RoundTaskTable($params);
   $table->run();
   $taskTableHtml = $table->getHtml();
 

@@ -3,11 +3,11 @@
     Arată
 
     <select name="attempted">
-      {for $a = 0 to TaskTableParams::NUM_ATTEMPTED-1}
+      {for $a = 0 to RoundTaskTableParams::NUM_ATTEMPTED-1}
         <option
           {if $a == $params->attempted}selected{/if}
           value="{$a}">
-          {TaskTableParams::getAttemptedText($a)}
+          {RoundTaskTableParams::getAttemptedText($a)}
         </option>
       {/for}
     </select>

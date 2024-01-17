@@ -3,7 +3,7 @@
 function ajax_run(): void {
   $columns = Request::getArray('columns');
 
-  $params = new TaskTableParams();
+  $params = new RoundTaskTableParams();
   $params->roundId = Request::get('roundId');
   $params->userId = Request::get('userId');
   $params->attempted = Request::get('attempted');
@@ -24,7 +24,7 @@ function ajax_run(): void {
   if (!$round) {
     $response['error'] = 'Valoare incorectă pentru parametrul „roundId”.';
   } else {
-    $table = new TaskTable($params);
+    $table = new RoundTaskTable($params);
     $table->run();
     $response['html'] = $table->getHtml();
   }
