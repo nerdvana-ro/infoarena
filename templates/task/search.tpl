@@ -6,9 +6,9 @@
   <h1>Rezultatele filtrării</h1>
 
   <div id="task-filter-help">
-    <div> </div> Tag neselectat
-    <div class="selected-filter"> </div> Tag selectat
-    <div class="sub-selected-filters"> </div> Categorie din care e selectat cel puțin un tag
+    <div></div> Etichetă neselectată
+    <div class="selected-filter"></div> Etichetă selectată
+    <div class="sub-selected-filters"></div> Categorie selectată parțial
   </div>
 
   <br>

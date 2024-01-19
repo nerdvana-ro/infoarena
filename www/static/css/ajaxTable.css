@@ -25,6 +25,7 @@
 .ajax-table .controls {
   align-items: center;
   display: flex;
+  margin-top: 10px;
 }
 
 .ajax-table .controls .range {
