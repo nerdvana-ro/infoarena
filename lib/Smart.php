@@ -31,7 +31,7 @@ class Smart {
       'deps' => [ 'jquery' ],
     ],
     'main' => [
-      'css' => [ 'css/sitewide.css', 'css/screen.css', 'css/print.css' ],
+      'css' => [ 'css/sitewide.css', 'css/screen.css?v=1', 'css/print.css' ],
       'js' => [
         'js/config.js.php', 'js/default.js', 'js/postdata.js',
         'js/roundtimer.js', 'js/submit.js', 'js/tags.js', 'js/time.js',
@@ -158,7 +158,12 @@ class Smart {
   private static function makeRelativeUrls(array $urls): array {
     $result = [];
     foreach ($urls as $url) {
-      $result[] = url_static($url);
+      $parts = explode('?', $url);
+      $url = url_static($parts[0]);
+      if (count($parts) == 2) {
+        $url .= '?' . $parts[1];
+      }
+      $result[] = $url;
     }
     return $result;
   }

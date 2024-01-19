@@ -1124,12 +1124,12 @@ table.form td {
 }
 
 /* Menu for task filtering */
+#task-filter-columns {
+  display: flex;
+}
+
 #task-filter-menu {
-  float: left;
-  height: 100%;
-  position: relative;
-  text-align: center;
-  width: 200px;
+  min-width: 200px;
 }
 
 #task-filter-menu ul {
@@ -1144,115 +1144,72 @@ table.form td {
 }
 
 .mainmenu li a {
-  background-color: #BAD48A;
-  border: solid 1px #699A0A;
-  color: #555;
+  background-color: #e6f3ff;
+  border: solid 1px #aaa;
+  box-sizing: border-box;
+  color: #222;
   display: block;
   font-family: monospace;
-  height: 26px;
-  line-height: 26px;
-  padding: 2px;
-  text-align: left;
-  text-shadow: 0px 2px 3px #BAD48A;
+  font-size: 12px;
+  padding: 5px 8px;
   transition: background-color 0.2s ease-in;
-  width: 200px;
+  width: 100%;
 }
 
-.mainmenu li+li a {
-  border-top: solid 1px #fff;
+.mainmenu li+li > a {
+  border-top-width: 0;
 }
-
 
 .mainmenu li a:hover {
-  background-color: #699A0A;
-  color: #fff;
+  filter: brightness(90%);
   text-decoration: none;
-  text-shadow-color: #699A0A;
 }
 
-/* Just some round corners, won't work in IE < 9 but it's okay*/
 .mainmenu > li:first-child > a {
-  border-top-left-radius: 10px;
+  border-top-left-radius: 6px;
 }
 .mainmenu > li:last-child > a {
-  border-bottom-left-radius: 10px;
+  border-bottom-left-radius: 6px;
 }
 
-/* Now the submenus */
 .submenu {
-  left: 206px;
-  opacity: 0;
+  left: 203px;
   position: absolute;
   top: 0px;
-  transition: visibility 0s ease-in 0.2s, opacity 0.2s ease-in;
   visibility: hidden;
   z-index: 100;
 }
 
-.submenu li a{
-  border-left-color: #fff;
+.submenu li a {
+  font-size: 85%;
   width: 250px;
 }
 
 li:hover > ul.submenu {
-  opacity: 1;
-  transition-delay: 0s;
   visibility: visible;
 }
 
-/* Help for task filtering */
-#task-filter-help {
-  height: 20px;
-  text-align: center;
-  width: 100%;
-}
-
 #task-filter-help div {
-  background-color: #BAD48A;
+  background-color: #e6f3ff;
+  border: 1px solid #222;
   display: inline-block;
   height: 20px;
-  margin-left: 20px;
-  transition: background-color 0.2s ease-in;
   vertical-align: middle;
   width: 20px;
 }
 
-#task-filter-help div:hover {
-  background-color:  #699A0A;
-}
-
 li.selected-filter > a, #task-filter-help div.selected-filter {
-  background-color: #E86C6C;
-}
-
-li.selected-filter > a:hover, #task-filter-help div.selected-filter:hover {
-  background-color: #C12425;
+  background-color: #003666;
+  color: white;
 }
 
 li.sub-selected-filters > a, #task-filter-help div.sub-selected-filters {
-  background-color: #72ADE8;
+  background-color: #2196ff;
 }
 
-li.sub-selected-filters > a:hover,
-#task-filter-help div.sub-selected-filters:hover {
-  background-color: #2285E8;
-}
-
-li.selected-filter.sub-selected-filters > a,
-#task-filter-help div.selected-filter.sub-selected-filters {
-  background-color: #B6A8E8;
-}
-
-li.selected-filter.sub-selected-filters > a:hover,
-#task-filter-help div.selected-filter.sub-selected-filters:hover {
-  background-color: #896EE8;
-}
-
-/* Task filtering table */
 #task-filter-table {
-  display: block;
-  margin-left: 200px;
-  padding: 0 10px;
+  flex: 1 0 auto;
+  margin-left: 10px;
 }
 
 .skip-job {
