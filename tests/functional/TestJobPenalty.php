@@ -12,22 +12,22 @@ class TestJobPenalty extends FunctionalTest {
 
     $this->assertPenaltyMessage(
       9,
-      'Penalizare: 11% (pentru 1438.5 minute)',
+      'Penalizare: 11% (pentru 1438,5 minute)',
       11);
 
     $this->assertPenaltyMessage(
       10,
-      'Penalizare: 11% (pentru 1438.5 minute) + 10% (pentru 1 submisie/ii)',
+      'Penalizare: 11% (pentru 1438,5 minute) + 10% (pentru 1 submisie/ii)',
       21);
 
     $this->assertPenaltyMessage(
       11,
-      'Penalizare: 11% (pentru 1438.5 minute) + 20% (pentru 2 submisie/ii), limitat la 25%',
+      'Penalizare: 11% (pentru 1438,5 minute) + 20% (pentru 2 submisie/ii), limitat la 25%',
       25);
 
     $this->assertPenaltyMessage(
       12,
-      'Penalizare: 11% (pentru 1438.5 minute) + 30% (pentru 3 submisie/ii), limitat la 25%',
+      'Penalizare: 11% (pentru 1438,5 minute) + 30% (pentru 3 submisie/ii), limitat la 25%',
       25);
   }
 

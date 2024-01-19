@@ -169,63 +169,6 @@ function task_get_submit_rounds($task_id) {
   return array_values($rounds);
 }
 
-function task_get_authors($task_id) {
-  log_assert(is_task_id($task_id), 'Invalid task_id');
-
-  return tag_get('task', $task_id, 'author');
-}
-
-// Task filter
-// Returns only tasks that contain all the tags
-// and are public
-function task_filter_by_tags($tag_ids, $scores = true, $user_id = null) {
-  log_assert(is_array($tag_ids), 'tag_ids must be an array');
-  foreach ($tag_ids as $tag_id) {
-    log_assert(is_tag_id($tag_id), 'invalid tag id');
-  }
-
-  if (count($tag_ids) > 0) {
-    $tag_filter = 'AND '.tag_build_where('task', $tag_ids);
-  } else {
-    $tag_filter = '';
-  }
-
-  if ($user_id == null || $scores == false) {
-    $join_score = '';
-    $score_fields = '';
-  } else {
-    // we get only the biggest score, round doesn't matter
-    $join_score = 'LEFT JOIN ia_score_user_round_task AS score ON
-                            score.`user_id` = '.db_quote($user_id).' AND
-                            score.`task_id` = ia_task.`id`';
-    $score_fields = ',MAX(score.`score`) AS `score`';
-  }
-
-
-  // MariaDB is happy with just "GROUP BY ia_task.id", but MySQL wants all
-  // the fields from SELECT listed in GROUP BY.
-  $query = "SELECT ia_task.id AS task_id,
-                ia_task.title AS task_title,
-                ia_task.page_name AS page_name,
-                ia_task.open_source AS open_source,
-                ia_task.open_tests AS open_tests,
-                ia_task.rating AS rating,
-                ia_task.source AS source,
-                ia_task.solved_by AS solved_by
-                $score_fields
-    FROM ia_task
-    $join_score
-    WHERE ia_task.security = 'public'
-    $tag_filter
-    GROUP BY ia_task.id, ia_task.title, ia_task.page_name, ia_task.open_source,
-    ia_task.open_tests, ia_task.rating, ia_task.source, ia_task.solved_by
-    ORDER BY task_title";
-
-  $tasks = db_fetch_all($query);
-
-  return $tasks;
-}
-
 // Returns the score a user got on a task in the archive.
 // Optionally, a different round parameter can be specified.
 function task_get_user_score($task_id, $user_id, $round_id = 'arhiva') {

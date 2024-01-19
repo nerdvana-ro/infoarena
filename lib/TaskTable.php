@@ -15,10 +15,12 @@ abstract class TaskTable {
     $this->params = $params;
   }
 
+  abstract function buildCountQuery(): ORMWrapper;
   abstract function buildQuery(): ORMWrapper;
+  abstract function getAjaxUrl(): string;
 
   function run(): void {
-    $query = $this->buildQuery();
+    $query = $this->buildCountQuery();
     $this->numResults = $query->count();
 
     $query = $this->buildQuery();
@@ -69,6 +71,7 @@ abstract class TaskTable {
 
   function getHtml(): string {
     Smart::assign([
+      'ajaxUrl' => $this->getAjaxUrl(),
       'firstResult' => $this->getFirstResult(),
       'lastResult' => $this->getLastResult(),
       'numPages' => $this->getPageCount(),

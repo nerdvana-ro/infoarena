@@ -236,7 +236,9 @@ function url_task_delete() {
 
 function url_task_search($tag_ids) {
     log_assert(is_array($tag_ids), "Tag ids must be an array");
-    return url_complex("cauta-probleme", array("tag_id" => $tag_ids));
+    $csv = implode('_', $tag_ids);
+    $args = $csv ? [ 'tag_ids' => $csv ] : [];
+    return url_complex("cauta-probleme", $args);
 }
 
 function url_task_tags() {

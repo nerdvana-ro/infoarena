@@ -12,7 +12,7 @@ class RoundTaskTable extends TaskTable {
       Identity::mayViewRoundScores($round->as_array());
   }
 
-  function buildQuery(): ORMWrapper {
+  function buildCountQuery(): ORMWrapper {
     $joinClause = sprintf(
       "(s.task_id = t.id and s.round_id = rt.round_id and s.user_id = %s)",
       $this->params->userId);
@@ -30,6 +30,10 @@ class RoundTaskTable extends TaskTable {
     return $query;
   }
 
+  function buildQuery(): ORMWrapper {
+    return $this->buildCountQuery();
+  }
+
   private function addAttemptedFilter(ORMWrapper $query): ORMWrapper {
     switch ($this->params->attempted) {
       case RoundTaskTableParams::A_UNTOUCHED:
@@ -43,4 +47,7 @@ class RoundTaskTable extends TaskTable {
     }
   }
 
+  function getAjaxUrl(): string {
+    return 'ajax/roundTaskTable.php';
+  }
 }

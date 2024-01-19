@@ -27,6 +27,13 @@ class Request {
     return self::get($name, []);
   }
 
+  /* Returns an array of values from a parameter in CSV format. We use
+   * underscore (_) because the comma is reserved. */
+  static function getCsv($name) {
+    $val = self::get($name);
+    return preg_split('/_/', $val, -1, PREG_SPLIT_NO_EMPTY);
+  }
+
   static function isWeb(): bool {
     return php_sapi_name() != 'cli';
   }

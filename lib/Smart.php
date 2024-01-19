@@ -12,11 +12,6 @@ class Smart {
   private static $includedResources = [];
 
   const RESOURCE_MAP = [
-    'ajaxTable' => [
-      'css' => [ 'css/ajaxTable.css' ],
-      'js' => [ 'js/ajaxtable.js' ],
-      'deps' => [ 'jquery' ],
-    ],
     'foreach' => [
       'js' => [ 'js/third-party/foreach.js' ],
     ],
@@ -29,6 +24,11 @@ class Smart {
     ],
     'jquery' => [
       'js' => [ 'js/third-party/jquery-3.7.0.min.js' ],
+    ],
+    'ajaxTable' => [
+      'css' => [ 'css/ajaxTable.css' ],
+      'js' => [ 'js/ajaxTable.js' ],
+      'deps' => [ 'jquery' ],
     ],
     'main' => [
       'css' => [ 'css/sitewide.css', 'css/screen.css', 'css/print.css' ],
@@ -58,6 +58,7 @@ class Smart {
     $s->template_dir = Config::ROOT . 'templates';
     $s->compile_dir = sys_get_temp_dir() . '/templates_c';
     $s->registerPlugin('modifier', 'fullDateTime', 'Time::fullDateTime');
+    $s->registerPlugin('modifier', 'implode', 'implode');
     self::$theSmarty = $s;
   }
 

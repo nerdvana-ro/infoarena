@@ -1099,16 +1099,6 @@ ul.task-tag-actions li {
   width: 25%;
 }
 
-/* Task filter by tag page */
-.filter_results {
-  line-height: 2em;
-}
-
-ul.tag_filters {
-  line-height: 1.5em;
-  margin: 0 .5em .5em 2em;
-}
-
 /* Proper Security UI */
 .security_show {
   display: inline;
@@ -1137,7 +1127,6 @@ table.form td {
 #task-filter-menu {
   float: left;
   height: 100%;
-  margin-top: 30px;
   position: relative;
   text-align: center;
   width: 200px;
@@ -1145,7 +1134,7 @@ table.form td {
 
 #task-filter-menu ul {
   list-style: none;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
   margin-top: 0;
   padding: 0;
 }
@@ -1184,6 +1173,9 @@ table.form td {
 /* Just some round corners, won't work in IE < 9 but it's okay*/
 .mainmenu > li:first-child > a {
   border-top-left-radius: 10px;
+}
+.mainmenu > li:last-child > a {
+  border-bottom-left-radius: 10px;
 }
 
 /* Now the submenus */
@@ -1260,7 +1252,7 @@ li.selected-filter.sub-selected-filters > a:hover,
 #task-filter-table {
   display: block;
   margin-left: 200px;
-  padding: 10px;
+  padding: 0 10px;
 }
 
 .skip-job {

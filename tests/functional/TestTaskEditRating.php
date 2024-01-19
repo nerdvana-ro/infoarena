@@ -28,8 +28,8 @@ class TestTaskEditRating extends FunctionalTest {
     $this->assertInputValue('#form_coding', '5');
     $this->visitTaskPage('task1');
     $rating = $this->getHiddenElementText('.star-rating .hidden');
-    $this->assert($rating == '3/5',
-                  "Expected a rating of 3/5, found {$rating}.");
+    $this->assert($rating == '3',
+                  "Expected a rating of 3, found {$rating}.");
   }
 
 }

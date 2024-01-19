@@ -182,22 +182,6 @@ function tag_build_where($obj, $tag_ids, $parent_table = null, $field = null) {
   return $where;
 }
 
-// Get all objects containting all tags from a list of tag ids
-function tag_get_objects($obj, $tag_ids, $content = true) {
-  log_assert(is_taggable($obj));
-  log_assert(is_array($tag_ids));
-  if ($content) {
-    $fields = "*";
-  } elseif ($obj == 'textblock') {
-    $fields = "name";
-  } else {
-    $fields = "id";
-  }
-  $query = sprintf("SELECT %s FROM ia_%s WHERE %s", $fields, db_escape($obj),
-                   tag_build_where($obj, $tag_ids));
-  return db_fetch_all($query);
-}
-
 // Count the number of objects containing all tags from a list of tag ids
 function tag_count_objects($obj, $tag_ids) {
   log_assert(is_taggable($obj));

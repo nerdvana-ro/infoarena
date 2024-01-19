@@ -22,6 +22,7 @@ class Core {
 
   static function init() {
     spl_autoload_register('Core::autoload', true);
+    setlocale(LC_ALL, Config::LOCALE);
     Time::init();
     DB::init();
     Session::init();

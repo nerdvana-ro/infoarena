@@ -11,8 +11,7 @@ class TestTaskViewLastScore extends FunctionalTest {
   private function testAnonView(): void {
     $this->ensureLoggedOut();
     $this->visitHomePage();
-    $this->assertNoText('Scorul tău');
-    $this->assertNoText('N/A');
+    $this->assertNoText('scorul tău');
   }
 
   private function testNormalView(): void {

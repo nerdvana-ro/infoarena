@@ -388,49 +388,39 @@ function controller_task_tag($task_id) {
 // Prints a list of tasks that contain all those tags
 // Tasks security must be public
 function controller_task_search() {
-  $tags = request('tag_id', null);
-  if (is_null($tags)) {
-    $tags = array();
-  }
-
-  if (!is_array($tags)) {
-    FlashMessage::addError("Filtru invalid.");
-    Util::redirectToHome();
-  }
-  foreach ($tags as $tag) {
+  $tagIds = Request::getCsv('tag_ids');
+  foreach ($tagIds as $tag) {
     if (!is_tag_id($tag)) {
       FlashMessage::addError("Filtru invalid.");
       Util::redirectToHome();
     }
   }
 
-  $user_id = Identity::getId();
-  $tasks = task_filter_by_tags($tags, true, $user_id);
-  foreach ($tasks as &$task) {
-    $task['authors'] = task_get_authors($task['task_id']);
-  }
+  $params = new SearchTaskTableParams();
+  $params->tagIds = $tagIds;
+  $params->cssClass = '';
+  $params->showRatings = true;
+  $params->showSolvedBy = false;;
+  $params->showScores = true;
+  $params->showPagination = true;
+  $params->pageNo = 1;
+  $params->pageSize = Config::PAGE_SIZE;
+  $params->sortField = 'id';
+  $params->sortAsc = true;
 
-  // Fetch the tags and all their parents so they can be displayed
-  // in a tree-like fashion
-  $selected_tags = array();
-  if (count($tags) > 0) {
-    $selected_tags = $tags;
-    while ((
-      $new_tags = array_unique(array_merge($tags,
-                                           tag_get_parents($tags)))
-    ) != $tags) {
-      $tags = $new_tags;
-    }
-  }
+  $table = new SearchTaskTable($params);
+  $table->run();
+  $taskTableHtml = $table->getHtml();
 
-  $authors = tag_get_with_counts(array('author'), $tags);
-  $tags = tag_build_tree(tag_get_with_counts(array('method', 'algorithm'),
-                                             $tags));
-  $view = array();
-  $view['title'] = "Rezultatele filtrării";
-  $view['tasks'] = $tasks;
-  $view['tags'] = $tags;
-  $view['selected_tags'] = $selected_tags;
-  $view['authors'] = $authors;
-  execute_view_die('views/task_filter_results.php', $view);
+  $tagTree = new AlgorithmTagTree($tagIds);
+  $authorTree = new AuthorTagTree($tagIds);
+
+  Smart::assign([
+    'authorTree' => $authorTree,
+    'tagIds' => $tagIds,
+    'tagTree' => $tagTree,
+    'taskTableHtml' => $taskTableHtml,
+  ]);
+  Smart::addResources('ajaxTable');
+  Smart::display('task/search.tpl');
 }

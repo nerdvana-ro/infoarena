@@ -12,7 +12,7 @@ class TestRoundView extends FunctionalTest {
     $this->ensureLoggedOut();
     $this->visitRoundPage('round-archive');
     $this->assertTextExists('Task 1');
-    $this->assertTextExists('Task 2');
+    $this->assertTableCellText('table.tasks', 2, 1, '...');
   }
 
   private function testAnonViewClassic(): void {

@@ -17,7 +17,7 @@ class ScoreUserRound extends Base {
     return Model::factory('ScoreUserRound')
       ->select('user_id', 'userId')
       ->select_expr('sum(score)', 'total')
-      ->where_in('round_id', $roundIds)
+      ->where_in('round_id', $roundIds ?: [''])
       ->group_by('user_id')
       ->order_by_desc('total')
       ->find_array();
@@ -26,7 +26,7 @@ class ScoreUserRound extends Base {
   // Returns a map of userId => roundId => score
   static function loadByRoundIds(array $roundIds): array {
     $records = Model::factory('ScoreUserRound')
-      ->where_in('round_id', $roundIds)
+      ->where_in('round_id', $roundIds ?: [''])
       ->find_many();
 
     $results = [];
