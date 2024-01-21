@@ -247,8 +247,7 @@ function textblock_get_revision_count($name) {
     return $row['cnt'] + 1;
 }
 
-// Grep through textblocks. This is mostly a hack needed for macro_grep.php
-// Also used for round deletion
+// Grep through textblocks. This is mostly a hack needed for round deletion.
 function textblock_grep($substr, $page, $regexp = false, $offset = null, $count = null) {
     if (!$regexp) {
         $compare = "LIKE";
