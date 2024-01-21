@@ -259,14 +259,6 @@ class Identity {
     self::enforce(self::mayRegisterForRound($round));
   }
 
-  static function mayRunSpecialMacros(): bool {
-    return self::isAdmin();
-  }
-
-  static function enforceRunSpecialMacros(): void {
-    self::enforce(self::mayRunSpecialMacros());
-  }
-
   static function maySkipJobs(): bool {
     return self::isAdmin();
   }
