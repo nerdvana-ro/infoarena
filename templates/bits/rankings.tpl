@@ -1,4 +1,28 @@
 {$penaltyLinks=Identity::isAdmin() && $roundId && !$params->showPagination}
+{if $params->showPagination}
+  <div class="controls">
+    {include "bits/pagination.tpl" n=$numPages k=$params->pageNo}
+
+    <div class="page-size-selector">
+      Arată
+      <select>
+        {foreach Config::PAGE_SIZES as $size}
+          <option
+            {if $params->pageSize == $size}selected{/if}
+            value="{$size}">
+            {$size}
+          </option>
+        {/foreach}
+      </select>
+      per pagină
+    </div>
+
+    <div class="range">
+      rezultatele {$firstResult}-{$lastResult} din {$numResults}
+    </div>
+  </div>
+{/if}
+
 <table
   class="alternating-colors"
   data-show-pagination="{$params->showPagination}"
@@ -49,27 +73,3 @@
     {/foreach}
   </tbody>
 </table>
-
-{if $params->showPagination}
-  <div class="controls">
-    <div class="range">
-      rezultatele {$firstResult}-{$lastResult} din {$numResults}
-    </div>
-
-    <div class="page-size-selector">
-      Arată
-      <select>
-        {foreach Config::PAGE_SIZES as $size}
-          <option
-            {if $params->pageSize == $size}selected{/if}
-            value="{$size}">
-            {$size}
-          </option>
-        {/foreach}
-      </select>
-      per pagină
-    </div>
-
-    {include "bits/pagination.tpl" n=$numPages k=$params->pageNo}
-  </div>
-{/if}

@@ -24,12 +24,18 @@
 
 .ajax-table .controls {
   align-items: center;
+  background-color: #f7f7f7;
+  border: 1px solid #ccc;
+  border-radius: 3px;
   display: flex;
-  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+  white-space: nowrap;
 }
 
 .ajax-table .controls .range {
   flex-grow: 10;
+  text-align: right;
 }
 
 .ajax-table .controls select {
@@ -37,12 +43,12 @@
 }
 
 .ajax-table .page-size-selector {
-  margin-right: 3em;
+  margin-left: 3em;
 }
 
 .pagination {
-  margin: 0;
-  padding-inline-start: 1em;
+  margin: 0 !important;
+  padding: 0;
 }
 
 .pagination li {
@@ -77,4 +83,20 @@
 .pagination span {
   border: 1px solid #aaa;
   color: #aaa;
+}
+
+.pagination .separator {
+  margin: 0 0.5em;
+}
+
+@media only screen and (max-width: 1300px) {
+  .ajax-table .controls .range {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 1100px) {
+  .ajax-table .page-size-selector {
+    display: none;
+  }
 }

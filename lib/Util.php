@@ -56,29 +56,42 @@ class Util {
     return filter_var($x, FILTER_VALIDATE_BOOLEAN);
   }
 
+  private static function trimPageRange(
+    int $first, int $last, int $numPages): array {
+
+    return [ max($first, 1), min($last, $numPages) ];
+  }
+
+  private static function pushPageRange(array& $ranges, array $new) {
+    $last = &$ranges[count($ranges) - 1];
+    if ($last[1] + 1 >= $new[0]) {
+      $last[1] = $new[1];
+    } else {
+      $ranges[] = $new;
+    }
+  }
+
   /**
    * Determines the range of page links to display.
    *
    * @param int $n Total number of pages
    * @param int $k Current page
-   * @return int[] An array of two elements, the left and right end of the range.
+   * @return pair[] An array of ranges, [first, last]
    *
-   * Example: $n = 100, $k = 20 => returns [18, 22]
+   * Example: $n = 100, $k = 20 => returns [[1,5], [15,25], [96,100]]
    */
   static function getPaginationRange($n, $k) {
-    // By default display two pages left and two pages right of $k
-    $l = max($k - 2, 1);
-    $r = min($k + 2, $n);
+    $NUM_FIRST = 3;
+    $NUM_MIDDLE = 5;
 
-    // Extend while needed and while there is room to extend on either side.
-    while (($r - $l < 4) && ($r - $l < $n - 1)) {
-      if ($l == 1) {
-        $r++;
-      } else {
-        $l--;
-      }
-    }
+    $beginning = self::trimPageRange(1, $NUM_FIRST, $n);
+    $middle = self::trimPageRange($k - $NUM_MIDDLE, $k + $NUM_MIDDLE, $n);
+    $end = self::trimPageRange($n - $NUM_FIRST + 1, $n, $n);
 
-    return [$l, $r];
+    $result = [ $beginning ];
+    self::pushPageRange($result, $middle);
+    self::pushPageRange($result, $end);
+
+    return $result;
   }
 }
