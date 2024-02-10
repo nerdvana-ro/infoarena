@@ -31,8 +31,4 @@ class SearchTaskTable extends TaskTable {
 
     return $query;
   }
-
-  function getAjaxUrl(): string {
-    return 'ajax/searchTaskTable.php';
-  }
 }

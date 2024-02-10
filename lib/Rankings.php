@@ -29,6 +29,9 @@ class Rankings {
 
   function __construct(RankingsParams $params) {
     $this->params = $params;
+  }
+
+  function run(): void {
     $this->parseRoundDescription();
     $this->makeColumns();
     $this->loadRoundScores();
@@ -64,6 +67,14 @@ class Rankings {
     $this->roundId = (count($this->roundMap) == 1)
       ? $this->roundMap[0]['roundId']
       : null;
+  }
+
+  function getRoundId(): ?string {
+    return $this->roundId;
+  }
+
+  function getColumns(): array {
+    return $this->columns;
   }
 
   // Creates an array of [ 'roundId', ['taskId',] 'displayValue' ].
@@ -166,8 +177,8 @@ class Rankings {
 
     if ($cmp) {
       usort($this->rows, 'Rankings::' . $cmp);
-    } else if (Str::startsWith($field, 'col-')) {
-      $col = substr($field, 4);
+    } else if (Str::startsWith($field, 'col')) {
+      $col = substr($field, 3);
       usort($this->rows, Rankings::cmpCol($col));
     }
 
@@ -186,7 +197,7 @@ class Rankings {
     }
   }
 
-  function getPageCount(): int {
+  function getNumPages(): int {
     if ($this->params->showPagination) {
       return ceil($this->numResults / $this->params->pageSize);
     } else {
@@ -202,20 +213,11 @@ class Rankings {
     return $this->getFirstResult() + count($this->rows) - 1;
   }
 
-  function getHtml(): string {
-    if (empty($this->rows)) {
-      return 'Nicio sursă trimisă la această rundă.';
-    }
-    Smart::assign([
-      'columns' => $this->columns,
-      'firstResult' => $this->getFirstResult(),
-      'lastResult' => $this->getLastResult(),
-      'numPages' => $this->getPageCount(),
-      'numResults' => $this->numResults,
-      'params' => $this->params,
-      'roundId' => $this->roundId,
-      'rows' => $this->rows,
-    ]);
-    return Smart::fetch('bits/rankings.tpl');
+  function getNumResults(): int {
+    return $this->numResults;
+  }
+
+  function getRows(): array {
+    return $this->rows;
   }
 }

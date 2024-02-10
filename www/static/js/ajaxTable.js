@@ -1,36 +1,45 @@
 $(function() {
 
-  function getColumns(table) {
-    results = [];
-    table.find('thead tr th').each(function() {
-      results.push($(this).data('field'));
-    });
-    return results;
+  var root = $('#page-table');
+  var table = root.find('table');
+  var form = $('#' + table.data('formId'));
+  var showPagination = table.data('showPagination');
+  var pageSizeSelect = root.find('.controls select');
+  var pag = [];
+
+  function buildPag() {
+    pag.sortField = table.data('sortField');
+    pag.sortAsc = table.data('sortAsc');
+    pag.page = table.data('page');
+    pag.pageSize = pageSizeSelect.val() ?? 0;
   }
 
-  function makeAjaxRequest(element) {
-    var div = element.closest('.ajax-table');
-    var table = div.find('table');
-    var url = table.data('url');
-    var columns = getColumns(table);
-    var pageSize = div.find('select').val() ?? 0;
+  function pagToStr() {
+    var dir = pag.sortAsc ? 'asc' : 'desc';
+    if (showPagination) {
+      return [pag.sortField, dir, pag.pageSize, pag.page].join('-');
+    } else {
+      return [pag.sortField, dir].join('-');
+    }
+  }
 
-    var data = {
-      columns: columns,
-      pageSize: pageSize,
-      pageNo: table.data('pageNo'),
-      showPagination: table.data('showPagination'),
-      sortField: table.data('sortField'),
-      sortAsc: table.data('sortAsc'),
-    };
-    Object.assign(data, div.data());
-
-    $.ajax({
-      url: url,
-      data: data,
-    }).done(function(data) {
-      div.html(data.html);
+  function removeEmptyInputs() {
+    form.find('input,select').each(function() {
+      if ($(this).val() === '') {
+        $(this).remove();
+      }
     });
+  }
+
+  function submitForm(element) {
+    form.append($('<input>', {
+      type: 'hidden',
+      name: 'pag',
+      value: pagToStr(),
+    }));
+
+    removeEmptyInputs();
+    form.submit();
   }
 
   function headerClick() {
@@ -38,45 +47,40 @@ $(function() {
       return;
     }
 
-    var table = $(this).closest('table');
-    var oldSortField = table.data('sortField');
-    var oldSortAsc = table.data('sortAsc');
-    var newSortField = $(this).data('field');
-    if (oldSortField == newSortField) {
-      table.data('sortAsc', 1 - oldSortAsc);
+    var field = $(this).data('field');
+    if (field == pag.sortField) {
+      pag.sortAsc = !pag.sortAsc;
     } else {
-      table.data('sortField', newSortField);
-      table.data('sortAsc', 1);
+      pag.sortField = field;
+      pag.sortAsc = true;
     }
-    table.data('pageNo', 1);
+    pag.page = 1;
 
-    makeAjaxRequest($(this));
+    submitForm();
   }
 
   function pageClick() {
-    var table = $(this).closest('.ajax-table').find('table');
-    var page = $(this).data('dest');
-    table.data('pageNo', page);
-
-    makeAjaxRequest($(this));
-    return false;
+    pag.page = $(this).data('dest');
+    submitForm();
   }
 
   function selectChange() {
-    var table = $(this).closest('.ajax-table').find('table');
-    table.data('pageNo', 1);
-    makeAjaxRequest($(this));
+    pag.pageSize = pageSizeSelect.val() ?? 0;
+    pag.page = 1;
+    submitForm();
   }
 
-  function autosubmitAttempted() {
-    $(this).closest('form').submit();
+  function attemptedChange() {
+    pag.page = 1;
+    submitForm();
   }
 
   function init() {
-    $(document).on('click', '.ajax-table th', headerClick);
-    $(document).on('click', '.ajax-table .pagination a', pageClick);
-    $(document).on('change', '.ajax-table .controls select', selectChange);
-    $('.task-filters select').on('change', autosubmitAttempted);
+    buildPag();
+    $(document).on('click', '#page-table th', headerClick);
+    $(document).on('click', '#page-table .pagination a', pageClick);
+    $(document).on('change', '#page-table .controls select', selectChange);
+    $('#task-filters select').on('change', attemptedChange);
   }
 
   init();

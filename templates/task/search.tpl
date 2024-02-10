@@ -5,6 +5,11 @@
 {block "content"}
   <h1>Rezultatele filtrării</h1>
 
+  <form id="tag-filters">
+    <input type="hidden" name="tag_ids" value="{'_'|implode:$tagIds}">
+    <input type="hidden" name="pag" value="{$params->toString()}">
+  </form>
+
   <div id="task-filter-columns">
     <div id="task-filter-menu">
       {include "bits/searchTagTree.tpl" tree=$tagTree}
@@ -26,10 +31,8 @@
     </div>
 
     <div id="task-filter-table">
-      <div
-        class="ajax-table"
-        data-tag-ids="{'_'|implode:$tagIds}">
-        {$taskTableHtml}
+      <div id="page-table">
+        {include "bits/taskTable.tpl" formId="tag-filters"}
       </div>
     </div>
   </div>

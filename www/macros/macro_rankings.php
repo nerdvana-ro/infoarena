@@ -1,9 +1,5 @@
 <?php
 
-function get_bool_arg(array $args, string $key, bool $default = false): bool {
-  return Util::toBool($args[$key] ?? $default);
-}
-
 // Displays rankings for one or more rounds.
 //
 // Arguments:
@@ -14,27 +10,24 @@ function get_bool_arg(array $args, string $key, bool $default = false): bool {
 //     detail_task   (optional) true/false print score columns for each task
 //     detail_round  (optional) true/false print score columns for each round
 function macro_rankings($args) {
-  $roundDescription = $args['rounds'] ?? null;
+  $args = new MacroArgs($args);
+  $roundDescription = $args->get('rounds');
   if (!$roundDescription) {
     return macro_error("Parameter 'rounds' is required.");
   }
 
   $params = new RankingsParams();
   $params->roundDescription = $roundDescription;
-  $params->detailRound = get_bool_arg($args, 'detail_round');
-  $params->detailTask = get_bool_arg($args, 'detail_task');
-  $params->showPagination = get_bool_arg($args, 'pagination');
-  $params->pageNo = 1;
-  $params->pageSize = Config::PAGE_SIZE;
-  $params->sortField = 'total';
-  $params->sortAsc = false;
+  $params->detailRound = $args->getBool('detail_round');
+  $params->detailTask = $args->getBool('detail_task');
+  $params->showPagination = $args->getBool('pagination');
 
   $rankings = new Rankings($params);
-  $html = $rankings->getHtml();
+  $rankings->run();
 
   Smart::assign([
     'params' => $params,
-    'rankingsHtml' => $html,
+    'rankings' => $rankings,
   ]);
   return Smart::fetch('macro/rankings.tpl');
 }

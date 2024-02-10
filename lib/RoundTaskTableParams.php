@@ -20,17 +20,20 @@ class RoundTaskTableParams extends TaskTableParams {
 
   public bool $showNumbers;
 
-  static function getAttemptedText(int $attempted) {
-    return self::A_NAMES[$attempted];
+  function __construct() {
+    parent::__construct();
+    $this->attempted = Request::getInt('attempted');
   }
 
-  function populateFromRequest(): void {
-    parent::populateFromRequest();
+  function getDefaultSortField(): string {
+    return 'number';
+  }
 
-    $columns = Request::getArray('columns');
-    $this->roundId = Request::get('roundId');
-    $this->userId = Request::get('userId');
-    $this->attempted = Request::get('attempted');
-    $this->showNumbers = in_array('number', $columns);
+  function getDefaultSortAsc(): bool {
+    return true;
+  }
+
+  static function getAttemptedText(int $attempted) {
+    return self::A_NAMES[$attempted];
   }
 }

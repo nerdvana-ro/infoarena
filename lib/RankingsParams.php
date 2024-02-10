@@ -4,16 +4,17 @@
  * Parameters for Rankings.
  **/
 
-class RankingsParams {
+class RankingsParams extends PagerParams {
   public string $roundDescription;
-
   public bool $detailRound;
   public bool $detailTask;
 
-  public bool $showPagination;
-  public int $pageNo;
-  public int $pageSize;
+  function getDefaultSortField(): string {
+    return 'rank';
+  }
 
-  public string $sortField;
-  public bool $sortAsc;
+  function getDefaultSortAsc(): bool {
+    return true;
+  }
+
 }
