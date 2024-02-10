@@ -435,6 +435,8 @@ class DataInjector {
                      'done', 80, 'Evaluare completă');
     $this->createJob($this->normal2, 'task1', 'round-archove', 's1.cpp',
                      'done', 100, 'Evaluare completă');
+    $this->createJob($this->admin, 'task1', 'round-user', 's1.cpp',
+                     'done', 40, 'Evaluare completă');
   }
 
   private function createJob(

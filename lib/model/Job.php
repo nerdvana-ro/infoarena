@@ -152,6 +152,11 @@ class Job extends Base {
       return self::SOURCE_VISIBILITY_YES;
     }
 
+    $round = $this->getRound();
+    if ($round && Identity::ownsRound($round->as_array())) {
+      return self::SOURCE_VISIBILITY_YES;
+    }
+
     if ($task->isPrivate()) {
       return self::SOURCE_VISIBILITY_NO;
     }

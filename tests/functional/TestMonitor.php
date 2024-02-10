@@ -11,8 +11,8 @@ class TestMonitor extends FunctionalTest {
     $this->visitHomePage();
     $this->clickLinkByText('Monitorul de evaluare');
     $numJobs = $this->countElementsByCss('table.monitor tbody tr');
-    $msg = sprintf('Expected 13 jobs, found %d instead.', $numJobs);
-    $this->assert($numJobs == 13, $msg);
+    $msg = sprintf('Expected 14 jobs, found %d instead.', $numJobs);
+    $this->assert($numJobs == 14, $msg);
   }
 
 }

@@ -8,6 +8,7 @@ class TestJobViewSource extends FunctionalTest {
     $this->testAnonViewNothing();
     $this->testNormalViewClosed();
     $this->testHelperViewClosed();
+    $this->testRoundOwnerView();
     $this->changeTaskSourceAccess('Da');
   }
 
@@ -40,6 +41,11 @@ class TestJobViewSource extends FunctionalTest {
     $this->assertSourceNotVisible(5);
     $this->assertSourceVisible(6, 's3.c');
     $this->assertSourceNotVisible(7);
+  }
+
+  private function testRoundOwnerView(): void {
+    $this->login('normal', '1234');
+    $this->assertSourceVisible(14, 's1.cpp');
   }
 
   private function assertSourceVisible(int $jobId, string $fileName): void {
