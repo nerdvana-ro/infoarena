@@ -1,9 +1,10 @@
+{$tasks=$taskTable->getTasks()}
 {if !count($tasks)}
   Nicio problemă găsită.
 {else}
   {if $params->showPagination}
     <div class="controls">
-      {include "bits/pagination.tpl" n=$numPages k=$params->pageNo}
+      {include "bits/pagination.tpl" n=$taskTable->getNumPages() k=$params->pageNo}
 
       <div class="page-size-selector">
         Arată
@@ -20,7 +21,8 @@
       </div>
 
       <div class="range">
-        rezultatele {$firstResult}-{$lastResult} din {$numResults}
+        rezultatele {$taskTable->getFirstResult()}-{$taskTable->getLastResult()}
+        din {$taskTable->getNumResults()}
       </div>
     </div>
   {/if}
@@ -28,10 +30,10 @@
   <table
     class="alternating-colors tasks fill-screen {$params->cssClass}"
     data-show-pagination="{$params->showPagination}"
-    data-page-no="{$params->pageNo}"
+    data-page="{$params->pageNo}"
     data-sort-field="{$params->sortField}"
     data-sort-asc="{$params->sortAsc}"
-    data-url="{Config::URL_PREFIX}{$ajaxUrl}">
+    data-form-id="{$formId}">
 
     <thead>
       <tr>

@@ -30,6 +30,10 @@ class Smart {
       'js' => [ 'js/ajaxTable.js' ],
       'deps' => [ 'jquery' ],
     ],
+    'taskSearch' => [
+      'js' => [ 'js/taskSearch.js' ],
+      'deps' => [ 'jquery' ],
+    ],
     'main' => [
       'css' => [ 'css/sitewide.css', 'css/screen.css?v=1', 'css/print.css' ],
       'js' => [

@@ -74,7 +74,7 @@ class Config {
   const MONITOR_AUTOREFRESH = false;
   const MONITOR_AUTOREFRESH_INTERVAL = 5000; // milliseconds
 
-  // Pager settings.
+  // Page sizes for task tables.
   const PAGE_SIZES = [ 20, 50, 100, 200 ];
   const PAGE_SIZE = 50;
 

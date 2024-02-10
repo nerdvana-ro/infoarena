@@ -1,12 +1,12 @@
-{if $showFilters}
-  <form class="task-filters">
+<form id="task-filters">
+  {if $showFilters}
     Arată
 
     <select name="attempted">
       {for $a = 0 to RoundTaskTableParams::NUM_ATTEMPTED-1}
         <option
           {if $a == $params->attempted}selected{/if}
-          value="{$a}">
+          value="{($a)?$a:''}">
           {RoundTaskTableParams::getAttemptedText($a)}
         </option>
       {/for}
@@ -37,13 +37,9 @@
         {include "bits/userTiny.tpl" user=$asUser showRating=true}
       {/if}
     </div>
-  </form>
-{/if}
+  {/if}
+</form>
 
-<div
-  class="ajax-table"
-  data-round-id="{$params->roundId}"
-  data-user-id="{$params->userId}"
-  data-attempted="{$params->attempted}">
-  {$taskTableHtml}
+<div id="page-table">
+  {include "bits/taskTable.tpl" formId="task-filters"}
 </div>

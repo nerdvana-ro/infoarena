@@ -400,27 +400,23 @@ function controller_task_search() {
   $params->tagIds = $tagIds;
   $params->cssClass = '';
   $params->showRatings = true;
-  $params->showSolvedBy = false;;
   $params->showScores = true;
+  $params->showSolvedBy = false;
   $params->showPagination = true;
-  $params->pageNo = 1;
-  $params->pageSize = Config::PAGE_SIZE;
-  $params->sortField = 'id';
-  $params->sortAsc = true;
 
   $table = new SearchTaskTable($params);
   $table->run();
-  $taskTableHtml = $table->getHtml();
 
   $tagTree = new AlgorithmTagTree($tagIds);
   $authorTree = new AuthorTagTree($tagIds);
 
   Smart::assign([
     'authorTree' => $authorTree,
+    'params' => $params,
     'tagIds' => $tagIds,
     'tagTree' => $tagTree,
-    'taskTableHtml' => $taskTableHtml,
+    'taskTable' => $table,
   ]);
-  Smart::addResources('ajaxTable');
+  Smart::addResources('ajaxTable', 'taskSearch');
   Smart::display('task/search.tpl');
 }

@@ -1,8 +1,7 @@
 <?php
 
 /**
- * This class loads pages of tasks and returns HTML-formatted data. Used once
- * when loading the page, then via Ajax for subsequent page loads.
+ * This class loads pages of tasks given a set of parameters.
  **/
 
 abstract class TaskTable {
@@ -17,7 +16,6 @@ abstract class TaskTable {
 
   abstract function buildCountQuery(): ORMWrapper;
   abstract function buildQuery(): ORMWrapper;
-  abstract function getAjaxUrl(): string;
 
   function run(): void {
     $query = $this->buildCountQuery();
@@ -53,7 +51,7 @@ abstract class TaskTable {
       ->offset(($this->params->pageNo - 1) * $this->params->pageSize);
   }
 
-  function getPageCount(): int {
+  function getNumPages(): int {
     if ($this->params->showPagination) {
       return ceil($this->numResults / $this->params->pageSize);
     } else {
@@ -61,24 +59,19 @@ abstract class TaskTable {
     }
   }
 
-  function getFirstResult() {
+  function getFirstResult(): int {
     return ($this->params->pageNo - 1) * $this->params->pageSize + 1;
   }
 
-  function getLastResult() {
+  function getLastResult(): int {
     return $this->getFirstResult() + count($this->tasks) - 1;
   }
 
-  function getHtml(): string {
-    Smart::assign([
-      'ajaxUrl' => $this->getAjaxUrl(),
-      'firstResult' => $this->getFirstResult(),
-      'lastResult' => $this->getLastResult(),
-      'numPages' => $this->getPageCount(),
-      'numResults' => $this->numResults,
-      'params' => $this->params,
-      'tasks' => $this->tasks,
-    ]);
-    return Smart::fetch('bits/taskTable.tpl');
+  function getNumResults(): int {
+    return $this->numResults;
+  }
+
+  function getTasks(): array {
+    return $this->tasks;
   }
 }

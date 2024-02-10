@@ -46,8 +46,4 @@ class RoundTaskTable extends TaskTable {
         return $query;
     }
   }
-
-  function getAjaxUrl(): string {
-    return 'ajax/roundTaskTable.php';
-  }
 }

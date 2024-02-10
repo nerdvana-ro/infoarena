@@ -1,28 +1,28 @@
-.task-filters {
+#task-filters {
   margin: 1.5em 0;
   padding: 0;
 }
 
-.task-filters select {
+#task-filters select {
   margin-left: 0.5em;
   margin-right: 0.5em;
   width: 100px;
 }
 
-.task-filters input[type="text"] {
+#task-filters input[type="text"] {
   margin-left: 0.5em;
   width: 150px;
 }
 
-.task-filters .error {
+#task-filters .error {
   color: red;
 }
 
-.ajax-table th:not([data-disabled-sort]) {
+#page-table th:not([data-disabled-sort]) {
   cursor: pointer;
 }
 
-.ajax-table .controls {
+#page-table .controls {
   align-items: center;
   background-color: #f7f7f7;
   border: 1px solid #ccc;
@@ -33,16 +33,16 @@
   white-space: nowrap;
 }
 
-.ajax-table .controls .range {
+#page-table .controls .range {
   flex-grow: 10;
   text-align: right;
 }
 
-.ajax-table .controls select {
+#page-table .controls select {
   width: 5em;
 }
 
-.ajax-table .page-size-selector {
+#page-table .page-size-selector {
   margin-left: 3em;
 }
 
@@ -90,13 +90,13 @@
 }
 
 @media only screen and (max-width: 1300px) {
-  .ajax-table .controls .range {
+  #page-table .controls .range {
     display: none;
   }
 }
 
 @media only screen and (max-width: 1100px) {
-  .ajax-table .page-size-selector {
+  #page-table .page-size-selector {
     display: none;
   }
 }

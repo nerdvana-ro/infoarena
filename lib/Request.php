@@ -10,7 +10,11 @@ class Request {
     return $_REQUEST[$name] ?? $default;
   }
 
-  static function getFloat(string $name, $default = ''): float {
+  static function getInt(string $name, $default = 0): int {
+    return (int)self::get($name, $default);
+  }
+
+  static function getFloat(string $name, $default = 0): float {
     return (float)self::get($name, $default);
   }
 
