@@ -160,7 +160,9 @@ class Rankings {
   }
 
   private static function cmpUsername(RankingsRow $a, RankingsRow $b): int {
-    return $a->user->username <=> $b->user->username;
+    $u1 = mb_strtolower($a->user->username);
+    $u2 = mb_strtolower($b->user->username);
+    return $u1 <=> $u2;
   }
 
   private static function cmpCol(int $col) {
