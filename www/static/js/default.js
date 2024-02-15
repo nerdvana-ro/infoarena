@@ -14,6 +14,8 @@ window.MathJax = {
 
 $(function() {
 
+  init();
+
   function init() {
     // fade away flash messages except for errors
     setTimeout(function() {
@@ -35,12 +37,19 @@ $(function() {
     }
 
     $('select.autosubmit').on('change', autosubmitSelect);
+    $(document).on('change', '.page-size-select select', pageSizeChange);
   }
 
   function autosubmitSelect() {
     $(this).closest('form').submit();
   }
 
-  init();
+  function pageSizeChange() {
+    var formId = $(this).data('formId');
+    var form = $('#' + formId);
+    var size = $(this).val();
+    form.find('input[name="pag"]').val(size);
+    form.submit();
+  }
 
 });

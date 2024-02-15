@@ -30,7 +30,7 @@
       type="submit"
       value="Vezi">
 
-    <div class="task-filter-messages">
+    <div>
       {if $asUsername && !$asUser}
         <span class="error">
           Utilizatorul „{$asUsername}” nu există.
