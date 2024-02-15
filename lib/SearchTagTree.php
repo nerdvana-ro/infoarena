@@ -8,9 +8,9 @@
 abstract class SearchTagTree {
   public array $roots = [];
 
-  function __construct(array $tagIds) {
+  function __construct(array $tagIds, string $pag) {
     foreach ($this->roots as $root) {
-      $root->computeUrl($tagIds);
+      $root->computeUrl($tagIds, $pag);
     }
   }
 }

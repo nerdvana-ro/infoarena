@@ -52,46 +52,24 @@ class Util {
     return $referrer;
   }
 
+  // Returns the relative URL and the query string.
+  static function addUrlParameter(string $url, string $name, string $value): string {
+    $path = parse_url($url, PHP_URL_PATH);
+    $str = parse_url($url, PHP_URL_QUERY) ?? '';
+    parse_str($str, $args);
+
+    $args[$name] = $value;
+    $args = array_filter($args); // Remove parameters with empty values.
+    $query = http_build_query($args);
+    return $query ? ($path . '?' . $query) : $path;
+  }
+
+  static function addRequestParameter(string $name, string $value): string {
+    $uri = $_SERVER['REQUEST_URI'];
+    return self::addUrlParameter($uri, $name, $value);
+  }
+
   static function toBool(mixed $x): bool {
     return filter_var($x, FILTER_VALIDATE_BOOLEAN);
-  }
-
-  private static function trimPageRange(
-    int $first, int $last, int $numPages): array {
-
-    return [ max($first, 1), min($last, $numPages) ];
-  }
-
-  private static function pushPageRange(array& $ranges, array $new) {
-    $last = &$ranges[count($ranges) - 1];
-    if ($last[1] + 1 >= $new[0]) {
-      $last[1] = $new[1];
-    } else {
-      $ranges[] = $new;
-    }
-  }
-
-  /**
-   * Determines the range of page links to display.
-   *
-   * @param int $n Total number of pages
-   * @param int $k Current page
-   * @return pair[] An array of ranges, [first, last]
-   *
-   * Example: $n = 100, $k = 20 => returns [[1,5], [15,25], [96,100]]
-   */
-  static function getPaginationRange($n, $k) {
-    $NUM_FIRST = 3;
-    $NUM_MIDDLE = 5;
-
-    $beginning = self::trimPageRange(1, $NUM_FIRST, $n);
-    $middle = self::trimPageRange($k - $NUM_MIDDLE, $k + $NUM_MIDDLE, $n);
-    $end = self::trimPageRange($n - $NUM_FIRST + 1, $n, $n);
-
-    $result = [ $beginning ];
-    self::pushPageRange($result, $middle);
-    self::pushPageRange($result, $end);
-
-    return $result;
   }
 }

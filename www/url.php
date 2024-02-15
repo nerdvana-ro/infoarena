@@ -50,7 +50,7 @@ function url_from_args($args) {
         if (is_null($v)) {
             continue;
         }
-        if ($k != 'page') {
+        if (($k != 'page') && ($k != 'pag')) {
             if (is_array($v)) {
                 foreach ($v as $sv) {
                     $url .= ($first ? "?" : "&");

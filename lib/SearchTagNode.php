@@ -25,19 +25,19 @@ class SearchTagNode {
 
   // Given the tag IDs that this tree was generated with, compute the target
   // URL should the user click on this node.
-  function computeUrl(array $tagIds): void {
+  function computeUrl(array $tagIds, string $pag): void {
     foreach ($this->children as $child) {
-      $child->computeUrl($tagIds);
+      $child->computeUrl($tagIds, $pag);
     }
 
     if (!$this->tag->id) {
       $this->url = '';
     } else {
-      $this->computeUrlProper($tagIds);
+      $this->computeUrlProper($tagIds, $pag);
     }
   }
 
-  function computeUrlProper(array $tagIds): void {
+  function computeUrlProper(array $tagIds, string $pag): void {
     if ($this->isSelected) {
       $tagIds = array_diff($tagIds, [ $this->tag->id ]);
     } else {
@@ -46,7 +46,9 @@ class SearchTagNode {
       $tagIds[] = $this->tag->id;
       $tagIds = $this->removeParentAndChildTags($tagIds);
     }
-    $this->url = url_task_search($tagIds);
+
+    $url = url_task_search($tagIds);
+    $this->url = Util::addUrlParameter($url, 'pag', $pag);
   }
 
   private function removeParentAndChildTags(array $tagIds): array {

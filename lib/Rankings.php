@@ -24,7 +24,6 @@ class Rankings {
   private array $taskScoreMap;
   private array $columns;
   private ORMWrapper $query;
-  private int $numResults;
   private array $rows;
 
   function __construct(RankingsParams $params) {
@@ -116,7 +115,7 @@ class Rankings {
       }
     }
     arsort($this->totals);
-    $this->numResults = count($this->totals);
+    $this->params->numResults = count($this->totals);
   }
 
   private function loadTaskScores(): void {
@@ -177,9 +176,8 @@ class Rankings {
 
     if ($cmp) {
       usort($this->rows, 'Rankings::' . $cmp);
-    } else if (Str::startsWith($field, 'col')) {
-      $col = substr($field, 3);
-      usort($this->rows, Rankings::cmpCol($col));
+    } else if (is_numeric($field)) {
+      usort($this->rows, Rankings::cmpCol($field));
     }
 
     if (!$this->params->sortAsc) {
@@ -191,30 +189,10 @@ class Rankings {
     if ($this->params->showPagination) {
       $this->rows = array_slice(
         $this->rows,
-        ($this->params->pageNo - 1) * $this->params->pageSize,
+        ($this->params->page - 1) * $this->params->pageSize,
         $this->params->pageSize,
         true);
     }
-  }
-
-  function getNumPages(): int {
-    if ($this->params->showPagination) {
-      return ceil($this->numResults / $this->params->pageSize);
-    } else {
-      return 1;
-    }
-  }
-
-  function getFirstResult() {
-    return ($this->params->pageNo - 1) * $this->params->pageSize + 1;
-  }
-
-  function getLastResult() {
-    return $this->getFirstResult() + count($this->rows) - 1;
-  }
-
-  function getNumResults(): int {
-    return $this->numResults;
   }
 
   function getRows(): array {
