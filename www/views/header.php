@@ -45,7 +45,7 @@ if (isset($form_errors) || isset($form_values)) {
     <link type="text/css" rel="stylesheet" href="<?= html_escape(url_static('css/screen.css')) ?>?v=1">
     <link type="text/css" rel="stylesheet" href="<?= html_escape(url_static('css/third-party/tabber.css')) ?>">
     <link type="text/css" rel="stylesheet" href="<?= html_escape(url_static('css/third-party/highlight-theme.css')) ?>">
-    <link type="text/css" rel="stylesheet" href="<?= html_escape(url_static('css/ajaxTable.css')) ?>">
+    <link type="text/css" rel="stylesheet" href="<?= html_escape(url_static('css/pagination.css')) ?>">
     <link type="text/css" rel="stylesheet" href="<?= html_escape(url_static('css/print.css')) ?>">
 
     <link
@@ -64,7 +64,6 @@ if (isset($form_errors) || isset($form_values)) {
     <script src="<?= html_escape(url_static('js/roundtimer.js')) ?>"></script>
     <script src="<?= html_escape(url_static('js/third-party/foreach.js')) ?>"></script>
     <script src="<?= html_escape(url_static('js/third-party/tablednd.js')) ?>"></script>
-    <script src="<?= html_escape(url_static('js/ajaxTable.js')) ?>"></script>
 
     <script>
       hljs.initHighlightingOnLoad();

@@ -411,6 +411,6 @@ function controller_task_search() {
     'tagTree' => $tagTree,
     'taskTable' => $table,
   ]);
-  Smart::addResources('ajaxTable', 'taskSearch');
+  Smart::addResources('pagination', 'taskSearch');
   Smart::display('task/search.tpl');
 }

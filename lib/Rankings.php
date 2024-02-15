@@ -3,9 +3,8 @@
 require_once Config::ROOT . 'common/db/round.php';
 
 /**
- * This class loads pages of rankings for one or more rounds and returns
- * HTML-formatted data. Used once when loading the page, then via Ajax for
- * subsequent page loads.
+ * This class loads pages of rankings for one or more rounds, with our without
+ * details for each task.
  **/
 
 class Rankings {

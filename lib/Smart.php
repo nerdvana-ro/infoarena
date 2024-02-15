@@ -25,10 +25,8 @@ class Smart {
     'jquery' => [
       'js' => [ 'js/third-party/jquery-3.7.0.min.js' ],
     ],
-    'ajaxTable' => [
-      'css' => [ 'css/ajaxTable.css' ],
-      'js' => [ 'js/ajaxTable.js' ],
-      'deps' => [ 'jquery' ],
+    'pagination' => [
+      'css' => [ 'css/pagination.css' ],
     ],
     'taskSearch' => [
       'js' => [ 'js/taskSearch.js' ],
