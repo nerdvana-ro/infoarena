@@ -2,7 +2,7 @@
   {if $showFilters}
     Arată
 
-    <select name="attempted">
+    <select name="attempted" class="autosubmit">
       {for $a = 0 to RoundTaskTableParams::NUM_ATTEMPTED-1}
         <option
           {if $a == $params->attempted}selected{/if}
@@ -19,6 +19,11 @@
       placeholder="username"
       type="text"
       value="{$asUsername}">
+
+    <input
+      name="pag"
+      type="hidden"
+      value="{$params->getArgForPage(1)}">
 
     <input
       class="button"
@@ -40,6 +45,4 @@
   {/if}
 </form>
 
-<div id="page-table">
-  {include "bits/taskTable.tpl" formId="task-filters"}
-</div>
+{include "bits/taskTable.tpl" formId="task-filters"}

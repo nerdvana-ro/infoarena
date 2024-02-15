@@ -12,25 +12,35 @@ window.MathJax = {
   }
 };
 
-function Page_Init() {
-  // fade away flash messages except for errors
-  setTimeout(function() {
-    $('.flash:not(.flash-error)').hide('slow');
-  }, 10000);
+$(function() {
 
-  // page log (used in development mode)
-  var log = $('#log');
-  if (log.length) {
-    // scroll down
-    log.scrollTop(log.prop('scrollHeight') - log.height());
+  function init() {
+    // fade away flash messages except for errors
+    setTimeout(function() {
+      $('.flash:not(.flash-error)').hide('slow');
+    }, 10000);
 
-    // maximize on click
-    var callback = function(event) {
-      log.height(log.prop('scrollHeight'));
-      log.prop('id', 'log_active');
+    // page log (used in development mode)
+    var log = $('#log');
+    if (log.length) {
+      // scroll down
+      log.scrollTop(log.prop('scrollHeight') - log.height());
+
+      // maximize on click
+      var callback = function(event) {
+        log.height(log.prop('scrollHeight'));
+        log.prop('id', 'log_active');
+      }
+      log.one('click', callback);
     }
-    log.one('click', callback);
-  }
-}
 
-$(document).ready(Page_Init);
+    $('select.autosubmit').on('change', autosubmitSelect);
+  }
+
+  function autosubmitSelect() {
+    $(this).closest('form').submit();
+  }
+
+  init();
+
+});

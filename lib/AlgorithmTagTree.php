@@ -2,7 +2,7 @@
 
 class AlgorithmTagTree extends SearchTagTree {
 
-  function __construct(array $tagIds) {
+  function __construct(array $tagIds, string $pag) {
     $tags = Tag::getWithCounts(['algorithm', 'method'], $tagIds);
     foreach ($tags as $tag) {
       if (!$tag->parent) {
@@ -18,6 +18,6 @@ class AlgorithmTagTree extends SearchTagTree {
       }
     }
 
-    parent::__construct($tagIds);
+    parent::__construct($tagIds, $pag);
   }
 }

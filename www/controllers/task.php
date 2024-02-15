@@ -397,18 +397,12 @@ function controller_task_search() {
   }
 
   $params = new SearchTaskTableParams();
-  $params->tagIds = $tagIds;
-  $params->cssClass = '';
-  $params->showRatings = true;
-  $params->showScores = true;
-  $params->showSolvedBy = false;
-  $params->showPagination = true;
-
   $table = new SearchTaskTable($params);
   $table->run();
 
-  $tagTree = new AlgorithmTagTree($tagIds);
-  $authorTree = new AuthorTagTree($tagIds);
+  $pag = $params->getArgForPage(1);
+  $tagTree = new AlgorithmTagTree($tagIds, $pag);
+  $authorTree = new AuthorTagTree($tagIds, $pag);
 
   Smart::assign([
     'authorTree' => $authorTree,

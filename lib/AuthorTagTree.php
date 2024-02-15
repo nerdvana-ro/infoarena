@@ -10,7 +10,7 @@ class AuthorTagTree extends SearchTagTree {
     ['T', 'Z'],
   ];
 
-  function __construct(array $tagIds) {
+  function __construct(array $tagIds, string $pag) {
     $tags = Tag::getWithCounts(['author'], $tagIds);
     foreach ($tags as $tag) {
       $sel = in_array($tag->id, $tagIds);
@@ -19,7 +19,7 @@ class AuthorTagTree extends SearchTagTree {
       $this->roots[$bracket]->addChild($tag, $sel);
     }
 
-    parent::__construct($tagIds);
+    parent::__construct($tagIds, $pag);
   }
 
   function ensureBracket(int $index): void {

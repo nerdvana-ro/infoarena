@@ -7,7 +7,6 @@
 abstract class TaskTable {
 
   protected TaskTableParams $params;
-  private int $numResults;
   private array $tasks;
 
   function __construct(TaskTableParams $params) {
@@ -19,7 +18,7 @@ abstract class TaskTable {
 
   function run(): void {
     $query = $this->buildCountQuery();
-    $this->numResults = $query->count();
+    $this->params->numResults = $query->count();
 
     $query = $this->buildQuery();
     $query = $this->addSortOrder($query);
@@ -48,27 +47,7 @@ abstract class TaskTable {
 
     return $query
       ->limit($this->params->pageSize)
-      ->offset(($this->params->pageNo - 1) * $this->params->pageSize);
-  }
-
-  function getNumPages(): int {
-    if ($this->params->showPagination) {
-      return ceil($this->numResults / $this->params->pageSize);
-    } else {
-      return 1;
-    }
-  }
-
-  function getFirstResult(): int {
-    return ($this->params->pageNo - 1) * $this->params->pageSize + 1;
-  }
-
-  function getLastResult(): int {
-    return $this->getFirstResult() + count($this->tasks) - 1;
-  }
-
-  function getNumResults(): int {
-    return $this->numResults;
+      ->offset(($this->params->page - 1) * $this->params->pageSize);
   }
 
   function getTasks(): array {

@@ -1,55 +1,40 @@
 <form id="page-info">
+  <input type="hidden" name="pag" value="">
 </form>
-<div
-  data-round-description="{$params->roundDescription|escape}"
-  data-detail-round="{$params->detailRound}"
-  data-detail-task="{$params->detailTask}"
-  id="page-table">
+
+<div id="page-table">
+
+  {include "bits/pagination.tpl" formId="page-info"}
 
   {$penaltyLinks=Identity::isAdmin() && $rankings->getRoundId() && !$params->showPagination}
-  {if $params->showPagination}
-    <div class="controls">
-      {include "bits/pagination.tpl" n=$rankings->getNumPages() k=$params->pageNo}
 
-      <div class="page-size-selector">
-        Arată
-        <select>
-          {foreach Config::PAGE_SIZES as $size}
-            <option
-              {if $params->pageSize == $size}selected{/if}
-              value="{$size}">
-              {$size}
-            </option>
-          {/foreach}
-        </select>
-        per pagină
-      </div>
-
-      <div class="range">
-        rezultatele {$rankings->getFirstResult()}-{$rankings->getLastResult()}
-        din {$rankings->getNumResults()}
-      </div>
-    </div>
-  {/if}
-
-  <table
-    class="alternating-colors"
-    data-show-pagination="{$params->showPagination}"
-    data-page="{$params->pageNo}"
-    data-sort-field="{$params->sortField}"
-    data-sort-asc="{$params->sortAsc}"
-    data-form-id="page-info">
-
+  <table class="alternating-colors">
     <thead>
       <tr>
-        <th class="center" data-field="rank">loc</th>
-        <th data-field="username">utilizator</th>
+        <th class="center">
+          <a href="{$params->getUrlForColumn('rank')}">
+            loc
+          </a>
+        </th>
+        <th>
+          <a href="{$params->getUrlForColumn('username')}">
+            utilizator
+          </a>
+        </th>
         {foreach $rankings->getColumns() as $i => $col}
-          <th class="center" data-field="col{$i}">{$col.displayValue}</th>
+          <th class="center">
+            <a href="{$params->getUrlForColumn($i)}">
+              {$col.displayValue}
+            </a>
+          </th>
         {/foreach}
-        <th class="center" data-field="total">total</th>
+        <th class="center">
+          <a href="{$params->getUrlForColumn('total')}">
+            total
+          </a>
+        </th>
         {if $penaltyLinks}
-          <th class="center" data-disabled-sort>acțiuni</th>
+          <th class="center">acțiuni</th>
         {/if}
       </tr>
     </thead>
