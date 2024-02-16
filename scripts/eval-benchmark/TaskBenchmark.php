@@ -59,7 +59,7 @@ class TaskBenchmark {
               $this->task['id'],
               WorkStack::getTaskNo(),
               WorkStack::getTaskCount()),
-      sprintf('URL:                https://nerdarena.ro/problema/%s',
+      sprintf('URL:                https://www.nerdarena.ro/problema/%s',
               $this->task['id']),
       sprintf('Number of tests:    %d',
               $this->task['test_count']),
