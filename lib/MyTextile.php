@@ -11,8 +11,8 @@ class MyTextile extends \Netcarver\Textile\Parser {
 
   const JAVASCRIPT_EVENTS = [
     // form events
-    'onblur', 'onchange', 'oncontextmenu', 'onfocus', 'oninput', 'oninvalid',
-    'onreset', 'onsearch', 'onselect', 'onsubmit',
+    'onblur', 'onchange', 'oncontextmenu', 'onerror', 'onfocus', 'oninput',
+    'oninvalid', 'onreset', 'onsearch', 'onselect', 'onsubmit',
 
     // keyboard events
     'onkeydown', 'onkeypress', 'onkeyup',
