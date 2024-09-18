@@ -21,8 +21,10 @@
  * your mind. These actions are irreversible!
  */
 
+require_once __DIR__ . '/../Config.php';
 require_once(__DIR__ . '/utilities.php');
 require_once(__DIR__ . '/../common/db/user.php');
+require_once __DIR__ . '/../lib/Core.php';
 db_connect();
 
 (count($argv) == 3) || usage($argv[0]);
