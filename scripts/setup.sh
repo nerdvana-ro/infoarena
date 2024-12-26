@@ -19,7 +19,6 @@ cd $ROOT_DIR
 echo "The root of your client appears to be $ROOT_DIR"
 
 copyFromSampleFile 'Config.php'
-copyFromSampleFile 'eval/config.php'
 copyFromSampleFile 'www/.htaccess'
 
 # Make the Smarty compiled templates directory world-writable

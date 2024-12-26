@@ -38,7 +38,7 @@ class EvalDownloader {
     curl_setopt($curl, CURLOPT_URL,
                 Config::URL_HOST . Config::URL_PREFIX .
                 "$page?action=download&file=$file");
-    curl_setopt($curl, CURLOPT_USERPWD, IA_JUDGE_USERNAME . ":" . IA_JUDGE_PASSWORD);
+    curl_setopt($curl, CURLOPT_USERPWD, Config::EVAL_USERNAME . ":" . Config::EVAL_PASSWORD);
     curl_setopt($curl, CURLOPT_FILE, $cachefd);
     curl_setopt($curl, CURLOPT_FAILONERROR, true);
 
@@ -70,7 +70,7 @@ class EvalDownloader {
       $result = self::downloadOnce($page, $file);
       if (!$result) {
         log_print('Failed downloading grader file... sleep and retry.');
-        Time::millisleep(1000);
+        sleep(1);
       }
     } while (!$result && $attempt < Config::EVAL_DOWNLOAD_RETRIES);
 
