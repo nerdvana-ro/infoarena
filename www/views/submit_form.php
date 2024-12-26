@@ -53,12 +53,14 @@ function compiler_field() {
         <label for="form_compiler">Compilator</label>
         <select name="compiler_id" id="form_compiler">
             <option value="-">[ Alegeți compilatorul ]</option>
-            <?php foreach (Config::ENABLED_COMPILERS as $comp => $text) { ?>
-                <option
-                    value="<?= $comp ?>"
-                    <?= ($comp == $cid) ? ' selected="selected"' : '' ?>>
-                    <?= $text ?>
-                </option>
+            <?php foreach (Config::COMPILERS as $comp => $prop) { ?>
+                <?php if ($prop['enabled']) { ?>
+                    <option
+                        value="<?= $comp ?>"
+                        <?= ($comp == $cid) ? ' selected="selected"' : '' ?>>
+                        <?= $prop['desc'] ?>
+                    </option>
+                <?php } ?>
             <?php } ?>
         </select>
         <?= ferr_span('compiler_id') ?>

@@ -48,4 +48,7 @@ class Str {
     return self::startsWith($pageName, Config::USER_TEXTBLOCK_PREFIX);
   }
 
+  static function getExtension(string $fileName): string {
+    return pathinfo($fileName, PATHINFO_EXTENSION);
+  }
 }

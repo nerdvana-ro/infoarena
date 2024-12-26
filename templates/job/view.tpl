@@ -10,9 +10,7 @@
   <h2>Raport evaluator</h2>
 
   {if $job->isDone()}
-    <div class="job-eval-log">
-      {$job->eval_log|escape}
-    </div>
+    <div class="job-eval-log">{$job->eval_log|escape}</div>
   {else}
     <p>Această sursă nu a fost evaluată încă.</p>
   {/if}

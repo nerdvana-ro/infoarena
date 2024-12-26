@@ -14,157 +14,140 @@ require_once(Config::ROOT.'common/db/job.php');
 require_once(Config::ROOT.'common/db/user.php');
 require_once(Config::ROOT.'common/db/task_statistics.php');
 
-require_once(Config::ROOT.'eval/utilities.php');
-require_once(Config::ROOT.'eval/download.php');
 require_once(Config::ROOT.'eval/Exceptions.php');
 require_once(Config::ROOT.'eval/ClassicGrader.php');
-require_once(Config::ROOT.'eval/InteractiveGrader.php');
 
 require_once __DIR__ . '/../lib/Core.php';
 
 error_reporting(0xFFFF);
 
 // Send job result.
-function job_send_result($jobid, $jobresult) {
-    log_print("Sending result for job #{$jobid} ".
-            "score {$jobresult['score']} message {$jobresult['message']}");
-    log_print("");
-    job_update($jobid, 'done', $jobresult['message'], $jobresult['log'], $jobresult['score']);
+function job_send_result(int $jobId, EvalResult $res): void {
+  log_print("Sending result for job #{$jobId} ".
+            "score {$res->score} message {$res->message}");
+  log_print("");
+  job_update($jobId, 'done', $res->message, $res->log, $res->score);
 }
 
 // This function handles a certain job.
 function job_handle($job) {
-    // Evaluating, mark as processing.
-    // FIXME: do it in query.
-    job_update($job['id'], 'processing');
+  $job = Job::get_by_id($job['id']);
+  $job->status = 'processing';
+  $job->save();
 
-    // Get task
-    $task = task_get($job['task_id']);
-    log_assert(!is_null($task), "Nu am gasit task-ul " . $job['task_id']);
-    log_assert_valid(task_validate($task));
+  $task = $job->getTask();
+  log_assert($task, "Nu am găsit task-ul {$job->task_id}.");
 
-    // Get task parameters.
-    $task_parameters = task_get_parameters($job['task_id']);
-    log_assert(!is_null($task_parameters),
-            "Nu am găsit parametrii task-ului " . $job['task_id']);
-    log_assert_valid(task_validate_parameters($task['type'],
-                                              $task_parameters));
+  // Make the grader and execute it.
+  log_print("Job #{$job->id} task {$task->id} round {$job->round_id} type {$task->type}");
+  if ($task->type == 'classic') {
+    $grader = new ClassicGrader($job, $task);
+  } else {
+    log_error("Nu știu să evaluez task-uri de tip {$task->type}.");
+  }
 
-    // Make the grader and execute it.
-    log_print("Job #{$job['id']} task {$task['id']} round {$job['round_id']} type {$task['type']}");
-    if ($task['type'] == 'classic') {
-        $grader = new ClassicGrader($task, $task_parameters, $job);
-    } else if ($task['type'] == 'interactive') {
-        $grader = new InteractiveGrader($task, $task_parameters, $job);
-    } else {
-        log_error("Nu stiu sa evaluez task-uri de tip ".$task['type']);
+  try {
+    $evalResult = $grader->grade();
+  } catch (EvalException $e) {
+    $evalResult = new EvalResult();
+    $evalResult->message = $e->getShortMessage();
+    $evalResult->log = $e->getMessage();
+  }
+
+  $submit_count = 0;
+  /**
+   * Check if the task was in a penalty type round
+   * Also increase the submit_count
+   */
+  if ($job->round_id) {
+    $round = round_get($job->round_id);
+    if ($round['type'] == 'penalty-round') {
+      $round_parameters = round_get_parameters($job->round_id);
+      /*
+       * Check the number of submits (so we can add to penalty)
+       */
+      if ($evalResult->score > 0) {
+        $percent = max($round_parameters['minimum_score'], 100 -
+                       $job->submissions * $round_parameters['submit_cost'] -
+                       (int)((db_date_parse($job->submit_time) -
+                              db_date_parse($round['start_time'])) /
+                             $round_parameters['decay_period']));
+        $evalResult->score = (int)($percent * $evalResult->score / 100);
+      }
     }
-    try {
-        $job_result = $grader->grade();
-    } catch (EvalException $e) {
-        $job_result = array(
-            'score' => 0,
-            'message' => $e->getShortMessage(),
-            'log' => $e->getMessage(),
-            'test_results' => array()
-        );
-    }
+  }
 
-    $submit_count = 0;
-    /**
-     * Check if the task was in a penalty type round
-     * Also increase the submit_count
-     */
-    if (!is_null($job['round_id']) && $job['round_id'] !== '') {
-        $round = round_get($job['round_id']);
-        if ($round['type'] == 'penalty-round') {
-            $round_parameters = round_get_parameters($job['round_id']);
-            /*
-            * Check the number of submits (so we can add to penalty)
-            */
-            if ($job_result['score'] > 0) {
-                $percent = max($round_parameters['minimum_score'], 100 -
-                        $job['submissions'] * $round_parameters['submit_cost'] -
-                        (int)((db_date_parse($job['submit_time']) -
-                            db_date_parse($round['start_time'])) /
-                        $round_parameters['decay_period']));
-                $job_result['score'] = (int)($percent * $job_result['score']
-                        / 100);
-            }
-        }
-    }
+  // Send job result and update score magic.
+  job_send_result($job->id, $evalResult);
+  score_update_for_job(
+    $evalResult->score,
+    $job->submit_time,
+    $job->user_id,
+    $job->task_id,
+    $job->round_id
+  );
 
-    // Send job result and update score magic.
-    job_send_result($job['id'], $job_result);
-    score_update_for_job(
-        $job_result['score'],
-        $job['submit_time'],
-        $job['user_id'],
-        $job['task_id'],
-        $job['round_id']
-    );
-
-    $file_size = strlen($job['file_contents']);
-    task_statistics_update_top_users(
-        $job['user_id'],
-        $job['task_id'],
-        $job['round_id'],
-        $job_result['score'],
-        $job['submit_time'],
-        $job['id'],
-        $file_size,
-        $job_result['test_results']
-    );
-    task_update_solved_by(
-        $job['task_id'],
-        $job['user_id']
-    );
+  $file_size = strlen($job->file_contents);
+  task_statistics_update_top_users(
+    $job->user_id,
+    $job->task_id,
+    $job->round_id,
+    $evalResult->score,
+    $job->submit_time,
+    $job->id,
+    $file_size,
+    $evalResult->testResults
+  );
+  task_update_solved_by(
+    $job->task_id,
+    $job->user_id
+  );
 }
 
 // Main loop. It works by polling the sql server
 // every IA_judge_POLL_INTERVAL
 function judge_main_loop() {
-    db_connect();
+  db_connect();
 
-    log_print("");
-    log_print("Judge started");
-    log_print("");
+  log_print("");
+  log_print("Judge started");
+  log_print("");
 
-    while (1) {
-        if ($round = round_get_round_to_wait()) {
-            round_event_wait($round);
-            continue;
-        }
-        if ($round = round_get_round_to_start()) {
-            round_event_start($round);
-            continue;
-        }
-        if ($round = round_get_round_to_stop()) {
-            round_event_stop($round);
-            continue;
-        }
-        if ($job = job_get_next_job()) {
-            job_handle($job);
-            continue;
-        }
-        milisleep(IA_JUDGE_POLL_INTERVAL);
+  while (1) {
+    if ($round = round_get_round_to_wait()) {
+      round_event_wait($round);
+      continue;
     }
+    if ($round = round_get_round_to_start()) {
+      round_event_start($round);
+      continue;
+    }
+    if ($round = round_get_round_to_stop()) {
+      round_event_stop($round);
+      continue;
+    }
+    if ($job = job_get_next_job()) {
+      job_handle($job);
+      continue;
+    }
+    Time::millisleep(IA_JUDGE_POLL_INTERVAL);
+  }
 }
 
 // Parse options. FIXME: php's built-in getopt is dumb
 $options = getopt("dl:");
 
 if (array_key_exists('d', $options)) {
-    // Run in daemon mode. Fork to background, pid to eval.pid
-    if ($pid = pcntl_fork()) {
-        die();
-    }
-    file_put_contents(Config::ROOT . 'eval/eval.pid', getmypid() . "\n");
+  // Run in daemon mode. Fork to background, pid to eval.pid
+  if ($pid = pcntl_fork()) {
+    die();
+  }
+  file_put_contents(Config::ROOT . 'eval/eval.pid', getmypid() . "\n");
 }
 
 // FIXME: Is there a better way to redirect output? No freopen in php.
 if (array_key_exists('l', $options)) {
-    ini_set('error_log', $options['l']);
+  ini_set('error_log', $options['l']);
 }
 
 judge_main_loop();

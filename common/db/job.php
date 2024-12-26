@@ -132,8 +132,8 @@ function job_get_by_id($job_id, $contents = false) {
 }
 
 // Updates ia_job_test table
-function job_test_update($job_id, $test_number, $test_group, $exec_time, $mem_limit,
-                         $grader_exec_time, $grader_mem_limit, $points, $grader_msg) {
+function job_test_update(int $job_id, int $test_number, int $test_group,
+                         EvalTestResult $res) {
     $query = sprintf("DELETE FROM ia_job_test WHERE job_id = '%s' AND test_number = '%s'",
                      db_escape($job_id), db_escape($test_number));
     db_query($query);
@@ -142,10 +142,10 @@ function job_test_update($job_id, $test_number, $test_group, $exec_time, $mem_li
                       grader_exec_time, grader_mem_used, points, grader_message)
                      VALUES ('%s', %s, %s, %s, %s, %s, %s, '%s', '%s')",
                      db_escape($job_id), db_escape($test_number), db_escape($test_group),
-                     db_escape($exec_time), db_escape($mem_limit),
-                     db_escape($grader_exec_time, true),
-                     db_escape($grader_mem_limit, true),
-                     db_escape($points), db_escape($grader_msg));
+                     db_escape($res->time), db_escape($res->memory),
+                     db_escape($res->graderTime, true),
+                     db_escape($res->graderMemory, true),
+                     db_escape($res->score), db_escape($res->message));
     return db_query($query);
 }
 

@@ -7,8 +7,6 @@ require_once(Config::ROOT . "common/textblock.php");
 function task_get_types() {
     return array(
         'classic' => 'Clasică',
-        'interactive' => 'Interactivă',
-        // 'output-only' => 'Doar de output',
     );
 }
 
@@ -41,28 +39,6 @@ function task_get_parameter_infos() {
                 'name' => 'Limita de memorie',
             ),
         ),
-        'interactive' => array(
-            'timelimit' => array(
-                'description' => 'Limita de timp (în secunde)',
-                'default' => 1,
-                'type' => 'float',
-                'name' => 'Limita de timp',
-            ),
-            'memlimit' => array(
-                'description' => 'Limita de memorie (în kilobytes)',
-                'default' => 131072,
-                'type' => 'integer',
-                'name' => 'Limita de memorie',
-            ),
-            'interact' => array(
-                'description' => 'Sursa programului interactiv.',
-                'default' => 'interact.c',
-                'type' => 'string',
-                'name' => 'Programul interactiv',
-            ),
-        ),
-        // 'output-only' => array(
-        // ),
     );
 }
 
@@ -240,50 +216,10 @@ function task_parse_test_group($string, $test_count) {
     return $current_group;
 }
 
-function task_get_testgroups($task) {
-    $test_count = $task['test_count'];
-    if (!is_whole_number($test_count)) {
-        return false;
-    }
-    if (!getattr($task, 'test_groups')) {
-        $testgroups = array();
-        for ($test = 1; $test <= $test_count; $test++) {
-            $group = array($test);
-            $testgroups[] = $group;
-        }
-        return $testgroups;
-    }
-
-    $used_count = array();
-    for ($test = 1; $test <= $test_count; $test++) {
-        $used_count[$test]  = 0;
-    }
-    $testgroups = array();
-    $groups = explode(';', $task['test_groups']);
-    foreach ($groups as &$group) {
-        $current_group = task_parse_test_group($group, $test_count);
-        if (!$current_group) {
-            return false;
-        }
-        foreach ($current_group as $test_in_group) {
-            $used_count[$test_in_group]++;
-        }
-        $testgroups[] = $current_group;
-    }
-
-    for ($test = 1; $test <= $test_count; $test++) {
-        if ($used_count[$test] != 1) {
-            return false;
-        }
-    }
-
-    return $testgroups;
-}
-
 // Validate parameters. Return errors as $form_errors
 function task_validate_parameters($task_type, $parameters) {
     $errors = array();
-    if ($task_type === 'classic' || $task_type === 'interactive') {
+    if ($task_type === 'classic') {
         if (!is_numeric($parameters['timelimit'])) {
             $errors['timelimit'] = "Limita de timp trebuie să fie un număr.";
         } else if ($parameters['timelimit'] < 0.01) {
@@ -298,15 +234,6 @@ function task_validate_parameters($task_type, $parameters) {
             $errors['memlimit'] = "Minimum 10 kilobytes.";
         } else if ($parameters['memlimit'] > 524288) {
             $errors['memlimit'] = "Maximum 512 megabytes.";
-        }
-    }
-    if ($task_type === 'interactive') {
-        if ($parameters['interact'] === '') {
-            $errors['interact'] = 'Trebuie specificat un program interactiv.';
-        } else {
-            if (!is_attachment_name($parameters['interact'])) {
-                $errors['interact'] = 'Nume de fișier invalid.';
-            }
         }
     }
     return $errors;

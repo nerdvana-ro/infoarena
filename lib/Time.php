@@ -33,4 +33,8 @@ class Time {
     $d = DateTime::createFromFormat('0.u00 U', $timestamp);
     return $d->format('Y-m-d H:i:s.v');
   }
+
+  static function millisleep(int $ms): void {
+    usleep($ms * 1000);
+  }
 }
