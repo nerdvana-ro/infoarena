@@ -217,19 +217,16 @@ function task_statistics_get_points_distribution($task_id, $round_id) {
 // for the criteria $criteria
 function task_statistics_compute_special_score($criteria,
                                                $file_size,
-                                               $test_results) {
+                                               array $testResults) {
     if ($criteria === 'size') {
         return $file_size;
     }
-    $criteria_key = array(
-        'time' => 'test_time',
-        'memory' => 'test_mem',
-    );
 
     $special_score = 0;
-    foreach ($test_results as $test_result) {
-        $special_score = max($special_score,
-                             $test_result[$criteria_key[$criteria]]);
+    foreach ($testResults as $res) {
+        // $res is an object of type EvalTestResult.
+        $key = ($criteria == 'time') ? $res->time : $res->memory;
+        $special_score = max($special_score, $key);
     }
     return $special_score;
 }
@@ -243,7 +240,7 @@ function task_statistics_update_top_users($user_id,
                                           $submit_time,
                                           $job_id,
                                           $file_size,
-                                          $test_results) {
+                                          array $testResults) {
     if ($score < 100) {
         // The job doesn't qualify to enter the top. Ignore.
         return;
@@ -259,7 +256,7 @@ function task_statistics_update_top_users($user_id,
         $special_score = task_statistics_compute_special_score(
                                                             $criteria,
                                                             $file_size,
-                                                            $test_results);
+                                                            $testResults);
 
         // Check if the user is already in the top
         $special_score_in_top = -1;

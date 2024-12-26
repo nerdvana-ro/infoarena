@@ -78,7 +78,7 @@ class JobBenchmark {
 
   private function compileJobSource(): bool {
     try {
-      $this->grader->compileJobSource();
+      $this->grader->compileUserSource();
       return true;
     } catch (EvalUserCompileError $e) {
       Log::warn('Compilation error.', [], 2);

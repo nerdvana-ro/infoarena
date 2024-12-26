@@ -102,14 +102,66 @@ class Config {
   const COPYRIGHT_OWNER = 'NerdArena';
   const ABOUT_PAGE = 'despre-nerdarena';
 
-  const ENABLED_COMPILERS = [
-    'c-32' => 'GNU C - 32bit',
-    'cpp-32' => 'GNU C++ - 32bit',
-    'c-64' => 'GNU C - 64bit',
-    'cpp-64' => 'GNU C++ - 64bit',
-    'fpc' => 'FreePascal',
-    'java' => 'Java',
-    'rs' => 'Rust',
-    'py' => 'Python3 (FOARTE EXPERIMENTAL!)',
+  // Settings for isolate, the IOI sandbox.
+  const ISOLATE_COMMAND = '/usr/local/bin/isolate';
+  const ISOLATE_BOX = '/var/local/lib/isolate/0/box/';
+  const ISOLATE_META_FILE = self::ISOLATE_BOX . 'meta';
+  const ISOLATE_EXTRA_WALL_TIME_SEC = 2.0;
+  const ISOLATE_STDOUT = 'isolate-stdout';
+  const ISOLATE_STDERR = 'isolate-stderr';
+
+  // Settings for the eval system.
+  const EVAL_SAVE_DIR = self::ROOT . 'eval/jail/%d/'; // %d = job ID
+  const EVAL_DOWNLOAD_RETRIES = 5;
+
+  // Compiler settings.
+  // enabled: Whether to accept new jobs for this language.
+  // mounts: Used for compilation only; not used for running the user program.
+  const COMPILERS = [
+    'c' => [
+      'enabled' => true,
+      'desc' => 'GNU C - 64bit',
+      'cmd' => '/usr/bin/gcc -m64 -DINFOARENA -Wall -O2 -static -std=c11 %src% -o %bin% -lm',
+      'extension' => 'c',
+      'mounts' => [
+        'lib', 'lib64', 'usr/bin', 'usr/include', 'usr/lib',
+      ],
+    ],
+    'cpp' => [
+      'enabled' => true,
+      'desc' => 'GNU C++ - 64bit',
+      'cmd' => '/usr/bin/g++ -m64 -DINFOARENA -Wall -O2 -static -std=c++14 %src% -o %bin% -lm',
+      'extension' => 'cpp',
+      'mounts' => [
+        'lib', 'lib64', 'usr/bin', 'usr/include', 'usr/lib',
+      ],
+    ],
+    'c-32' => [
+      'enabled' => true,
+      'desc' => 'GNU C - 32bit',
+      'cmd' => '/usr/bin/gcc -m32 -DINFOARENA -Wall -O2 -static -std=c11 %src% -o %bin% -lm',
+      'extension' => 'c',
+      'mounts' => [
+        'lib', 'lib64', 'usr/bin', 'usr/include', 'usr/lib', 'usr/lib32',
+      ],
+    ],
+    'cpp-32' => [
+      'enabled' => true,
+      'desc' => 'GNU C++ - 32bit',
+      'cmd' => '/usr/bin/g++ -m32 -DINFOARENA -Wall -O2 -static -std=c++14 %src% -o %bin% -lm',
+      'extension' => 'cpp',
+      'mounts' => [
+        'lib', 'lib64', 'usr/bin', 'usr/include', 'usr/lib', 'usr/lib32',
+      ],
+    ],
+    'pas' => [
+      'enabled' => true,
+      'desc' => 'Free Pascal',
+      'cmd' => '/usr/bin/fpc -O2 -Xs %src% -o%bin% -dINFOARENA',
+      'extension' => 'pas',
+      'mounts' => [
+        'lib', 'lib64', 'usr/bin', 'usr/lib',
+      ],
+    ],
   ];
 }

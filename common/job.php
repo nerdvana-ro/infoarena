@@ -9,7 +9,7 @@ require_once(Config::ROOT.'common/db/round.php');
 //      task_id: Task to submit for.
 //      round_id: Round to submit for. Optional, if missing the job is sent
 //              to all parent rounds.
-//      compiler_id: c-32, cpp-32, c-64, cpp-64, fpc, java, py or rs
+//      compiler_id: One of the keys in Config::COMPILERS.
 //      solution: A string with the file to submit.
 //
 // Returns an array of errors, or array() on success.
@@ -47,20 +47,12 @@ function safe_job_submit($args) {
   }
 
   // Validate compiler id
-  $valid_compilers = array(
-    'c-32',
-    'cpp-32',
-    'c-64',
-    'cpp-64',
-    'fpc',
-    'py',
-    'java',
-    'rs',
-  );
+  $cid = $args['compiler_id'] ?? null;
+  $validCid = Config::COMPILERS[$cid]['enabled'] ?? false;
 
-  if (!array_key_exists('compiler_id', $args)) {
+  if (!$cid) {
     $errors['compiler_id'] = "Lipsește compilatorul.";
-  } else if (array_search($args['compiler_id'], $valid_compilers) === false) {
+  } else if (!$validCid) {
     $errors['compiler_id'] = "Compilator invalid.";
   }
 

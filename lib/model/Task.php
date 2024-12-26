@@ -102,6 +102,10 @@ class Task extends Base {
     return url_attachment_list("problema/{$this->id}");
   }
 
+  function getGraderExtension(): string {
+    return Str::getExtension($this->evaluator);
+  }
+
   function getIncompleteRounds() {
     return Model::factory('Round')
       ->table_alias('r')
@@ -121,6 +125,44 @@ class Task extends Base {
       ->where('rt.round_id', $roundId)
       ->order_by_asc('rt.order_id')
       ->find_many();
+  }
+
+  // Returns an array of arrays. Each array is a group. Returns false on
+  // errors.
+  function getTestGroups(): array {
+    if (!$this->test_groups) {
+      $result = [];
+      for ($t = 1; $t <= $this->test_count; $t++) {
+        $result[] = [ $t ];
+      }
+      return $result;
+    }
+
+    $usedCount = [];
+    for ($t = 1; $t <= $this->test_count; $t++) {
+      $usedCount[$t]  = 0;
+    }
+
+    $result = [];
+    $groups = explode(';', $this->test_groups);
+    foreach ($groups as $group) {
+      $g = task_parse_test_group($group, $this->test_count);
+      if (!$g) {
+        return false;
+      }
+      foreach ($g as $t) {
+        $usedCount[$t]++;
+      }
+      $result[] = $g;
+    }
+
+    for ($t = 1; $t <= $this->test_count; $t++) {
+      if ($usedCount[$t] != 1) {
+        return false;
+      }
+    }
+
+    return $result;
   }
 
   function isPrivate(): bool {
