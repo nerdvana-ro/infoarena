@@ -270,8 +270,8 @@ function logging_error_handler($errno, $errstr, $errfile, $errline) {
   $errstr = $errortype_msgprefix[$errno] . $errstr;
 
   // HACK: Add timestamp if desired.
-  if (defined('IA_LOG_TIMESTAMP_FORMAT')) {
-    $errstr = date(IA_LOG_TIMESTAMP_FORMAT) . ": " . $errstr;
+  if (Config::LOG_TIMESTAMP_FORMAT) {
+    $errstr = date(Config::LOG_TIMESTAMP_FORMAT) . ": " . $errstr;
   }
 
   // The behaviour of this function is defined with error_log in php.ini

@@ -1,7 +1,7 @@
 #! /usr/bin/env php
 <?php
 
-require_once(dirname($argv[0]) . "/config.php");
+require_once __DIR__ . '/../Config.php';
 
 require_once(Config::ROOT.'common/log.php');
 require_once(Config::ROOT.'common/common.php');
@@ -104,8 +104,7 @@ function job_handle($job) {
   );
 }
 
-// Main loop. It works by polling the sql server
-// every IA_judge_POLL_INTERVAL
+// Main loop. It works by polling the SQL server.
 function judge_main_loop() {
   db_connect();
 
@@ -130,7 +129,7 @@ function judge_main_loop() {
       job_handle($job);
       continue;
     }
-    Time::millisleep(IA_JUDGE_POLL_INTERVAL);
+    usleep(Config::EVAL_POLL_INTERVAL * 1_000_000);
   }
 }
 

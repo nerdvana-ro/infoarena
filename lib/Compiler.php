@@ -62,8 +62,8 @@ class Compiler {
 
     $iso = new IsolateSandbox();
     $iso->unlimitProcesses();
-    $iso->setTimeLimit(IA_JUDGE_COMPILE_TIMELIMIT);
-    $iso->setMemoryLimit(IA_JUDGE_COMPILE_MEMLIMIT);
+    $iso->setTimeLimit(Config::EVAL_COMPILE_TIME_LIMIT);
+    $iso->setMemoryLimit(Config::EVAL_COMPILE_MEMORY_LIMIT);
     $iso->pushFile($this->source, $isoSrc);
 
     $res = $iso->run($cmd, '', $comp['mounts'], []);

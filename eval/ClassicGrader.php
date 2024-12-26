@@ -192,7 +192,7 @@ class ClassicGrader {
   private function runCustomGrader(int $testNo, IsolateResult $res): EvalTestResult {
     $iso = new IsolateSandbox();
 
-    if (IA_EVAL_NEEDS_SOURCE) {
+    if (Config::EVAL_GRADER_NEEDS_SOURCE) {
       $dest = $this->task->id . '.' . $this->getUserExtension();
       $iso->pushFile($this->getUserSrc(), $dest);
     }
@@ -205,8 +205,8 @@ class ClassicGrader {
     if (file_exists($outFile)) {
       $iso->pushFile($outFile);
     }
-    $iso->setTimeLimit(IA_JUDGE_TASK_EVAL_TIMELIMIT);
-    $iso->setMemoryLimit(IA_JUDGE_TASK_EVAL_MEMLIMIT);
+    $iso->setTimeLimit(Config::EVAL_GRADER_TIME_LIMIT);
+    $iso->setMemoryLimit(Config::EVAL_GRADER_MEMORY_LIMIT);
     $gres = $iso->run('./grader', '', [], []);
 
     if (!$gres->success()) {
@@ -226,18 +226,18 @@ class ClassicGrader {
         "pe testul $testNo (se ignoră spații, newline, etc.).");
     }
     $score = (int)$stdout;
-    if ($score < 0 || $score > IA_JUDGE_MAX_SCORE) {
+    if ($score < 0 || $score > Config::EVAL_MAX_SCORE) {
       log_print("Test $testNo: Invalid score returned by evaluator");
       throw new EvalTaskOwnerError(
         "Evaluatorul a returnat un scor invalid ({$score}).");
     }
 
     $msg = trim($iso->getStderr());
-    if (($msg == '') || (strlen($msg) > IA_JUDGE_MAX_EVAL_MESSAGE)) {
+    if (($msg == '') || (strlen($msg) > Config::EVAL_MAX_GRADER_MESSAGE)) {
       log_print("Test $testNo: Task eval message broken");
       throw new EvalTaskOwnerError(
         'Evaluatorul a returnat un mesaj gol sau mai lung de ' .
-        IA_JUDGE_MAX_EVAL_MESSAGE . ' de caractere la stdout');
+        Config::EVAL_MAX_GRADER_MESSAGE . ' de caractere la stdout');
     }
 
     log_print("Test $testNo: Eval gave {$score} points and said {$msg}");
@@ -300,7 +300,7 @@ class ClassicGrader {
   private function finalize(): void {
     $this->result->setComplete();
     if (($this->result->score < 0) ||
-        ($this->result->score > IA_JUDGE_MAX_SCORE)) {
+        ($this->result->score > Config::EVAL_MAX_SCORE)) {
       throw new EvalTaskOwnerError(
         'Evaluatorul a returnat un scor invalid.');
     }
