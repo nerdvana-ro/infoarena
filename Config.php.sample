@@ -47,6 +47,7 @@ class Config {
   const LOG_DISK_CACHE = false;
   const LOG_SQL_QUERIES = false;
   const LOG_SQL_QUERIES_EXPLAIN = false;
+  const LOG_TIMESTAMP_FORMAT = 'Y-m-d H:i:s'; // empty for no timestamps
 
   // Image resize info
   const GEOMETRY = [
@@ -110,9 +111,42 @@ class Config {
   const ISOLATE_STDOUT = 'isolate-stdout';
   const ISOLATE_STDERR = 'isolate-stderr';
 
-  // Settings for the eval system.
-  const EVAL_SAVE_DIR = self::ROOT . 'eval/jail/%d/'; // %d = job ID
+  /**
+   * Settings for the eval system.
+   **/
+
+  // Credentials for an admin account used via HTTP AUTH basic to download
+  // tests and graders.
+  const EVAL_USERNAME = 'eval';
+  const EVAL_PASSWORD = 'eval';
+
+  // How often to poll the server for things to do, in seconds.
+  const EVAL_POLL_INTERVAL = 0.3;
+
+  // Where to save evaluated jobs. %d will be replaced by the job ID.
+  const EVAL_SAVE_DIR = self::ROOT . 'eval/jail/%d/';
+
+  // How many times to retry fetching files from the server.
   const EVAL_DOWNLOAD_RETRIES = 5;
+
+  // Limits for compiler processes, in seconds / kilobytes.
+  const EVAL_COMPILE_TIME_LIMIT = 15.0;
+  const EVAL_COMPILE_MEMORY_LIMIT = 1024 * 1024; // 1 GiB
+
+  // Limits for grader processes, in seconds / kilobytes.
+  const EVAL_GRADER_TIME_LIMIT = 5.0;
+  const EVAL_GRADER_MEMORY_LIMIT = 1024 * 1024; // 1 GiB
+
+  // Should custom graders have access to the user source code? Useful when
+  // some tasks have syntax requirements (e.g. the solution may not use
+  // arrays).
+  const EVAL_GRADER_NEEDS_SOURCE = true;
+
+  // The most points a job can receive.
+  const EVAL_MAX_SCORE = 100;
+
+  // Maximum length allowed for a grader's feedback message.
+  const EVAL_MAX_GRADER_MESSAGE = 100;
 
   // Compiler settings.
   // enabled: Whether to accept new jobs for this language.
