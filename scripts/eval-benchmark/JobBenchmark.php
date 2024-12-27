@@ -9,7 +9,7 @@ class JobBenchmark {
   private array $tests;
   private int $numTaskTests;
   private int $numJobTests;
-  private ClassicGrader $grader;
+  private ClassicJudge $judge;
   private array $results = [];
 
   function __construct(array& $job, Database $db) {
@@ -17,7 +17,7 @@ class JobBenchmark {
     $this->db = $db;
     $this->owner = $this->db->getUser($this->job['user_id']);
     WorkStack::setJob($this->job, $this->owner);
-    $this->grader = new BenchmarkGrader(
+    $this->judge = new BenchmarkJudge(
       WorkStack::getTask(), $this->job);
   }
 
@@ -65,7 +65,7 @@ class JobBenchmark {
     if ($this->compileJobSource()) {
       Log::default('Running %d tests', [ $this->numJobTests ], 1);
       foreach ($this->tests as $test) {
-        $tb = new TestBenchmark($test, $this->grader, $this->db);
+        $tb = new TestBenchmark($test, $this->judge, $this->db);
         $timePair = $tb->run(); // possibly null
         if ($timePair) {
           $result[] = $timePair;
@@ -78,7 +78,7 @@ class JobBenchmark {
 
   private function compileJobSource(): bool {
     try {
-      $this->grader->compileUserSource();
+      $this->judge->compileUserSource();
       return true;
     } catch (EvalUserCompileError $e) {
       Log::warn('Compilation error.', [], 2);

@@ -1,9 +1,9 @@
 <?php
 
-require_once(Config::ROOT . 'eval/ClassicGrader.php');
+require_once(Config::ROOT . 'eval/ClassicJudge.php');
 require_once(Config::ROOT . 'eval/Exceptions.php');
 
-class BenchmarkGrader extends ClassicGrader {
+class BenchmarkJudge extends ClassicJudge {
   const JAIL_DIR = Config::ROOT . 'eval/jail/';
 
   function __construct(array $task, array $job) {
@@ -14,8 +14,8 @@ class BenchmarkGrader extends ClassicGrader {
   }
 
   /**
-   * Runs the job on a single test. Adapted from ClassicGrader::grade() and
-   * ClassicGrader::testCaseJudge(). Note that, even if a test passed on the
+   * Runs the job on a single test. Adapted from ClassicJudge::grade() and
+   * ClassicJudge::testCaseJudge(). Note that, even if a test passed on the
    * old hardware, it may still fail on the new one (e.g. job #552652).
    **/
   function runTest(): NewResult {
