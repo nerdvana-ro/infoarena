@@ -105,11 +105,11 @@ function job_handle($job) {
 }
 
 // Main loop. It works by polling the SQL server.
-function judge_main_loop() {
+function eval_main_loop() {
   db_connect();
 
   log_print("");
-  log_print("Judge started");
+  log_print("Eval started");
   log_print("");
 
   while (1) {
@@ -149,6 +149,6 @@ if (array_key_exists('l', $options)) {
   ini_set('error_log', $options['l']);
 }
 
-judge_main_loop();
+eval_main_loop();
 
 ?>
