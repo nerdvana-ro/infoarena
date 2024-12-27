@@ -28,10 +28,7 @@ final class EvalTaskOwnerError extends EvalException {
     }
 }
 
-abstract class EvalUserError extends EvalException {
-}
-
-final class EvalUserCompileError extends EvalUserError {
+final class EvalUserCompileError extends EvalException {
     public function __construct($message, $code = 0,
                                 Exception $previous = null) {
         parent::__construct("Eroare de compilare:\n" . $message,
