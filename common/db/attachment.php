@@ -138,7 +138,7 @@ function attachment_get_count($page, $name='%', $start = 0, $count = 99999999) {
 // attachment id.
 //
 // NOTE: You can't just put this into db.php or any other module shared
-// with the judge since it`s dependent on the www server setup.
+// with the eval since it`s dependent on the www server setup.
 // FIXME: does this belong here?
 function attachment_get_filepath($attach) {
   log_assert(is_array($attach));
