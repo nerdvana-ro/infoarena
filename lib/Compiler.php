@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This class can take a source file, compile it in an isolate sandbox, and
- * copy the resulting binary to a given destination.
+ * This class can take a source file, compile it in an isolate jail and copy
+ * the resulting binary to a given destination.
  **/
 
 class Compiler {
@@ -60,7 +60,7 @@ class Compiler {
     $cmd = str_replace('%src%', $isoSrc, $cmd);
     $cmd = str_replace('%bin%', $isoBin, $cmd);
 
-    $iso = new IsolateSandbox();
+    $iso = new IsolateJail();
     $iso->unlimitProcesses();
     $iso->setTimeLimit(Config::EVAL_COMPILE_TIME_LIMIT);
     $iso->setMemoryLimit(Config::EVAL_COMPILE_MEMORY_LIMIT);

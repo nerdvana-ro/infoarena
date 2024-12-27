@@ -38,16 +38,15 @@ function job_handle($job) {
   $task = $job->getTask();
   log_assert($task, "Nu am găsit task-ul {$job->task_id}.");
 
-  // Make the grader and execute it.
   log_print("Job #{$job->id} task {$task->id} round {$job->round_id} type {$task->type}");
   if ($task->type == 'classic') {
-    $grader = new ClassicJudge($job, $task);
+    $judge = new ClassicJudge($job, $task);
   } else {
     log_error("Nu știu să evaluez task-uri de tip {$task->type}.");
   }
 
   try {
-    $evalResult = $grader->grade();
+    $evalResult = $judge->run();
   } catch (EvalException $e) {
     $evalResult = new EvalResult();
     $evalResult->message = $e->getShortMessage();

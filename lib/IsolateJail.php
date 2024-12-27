@@ -1,6 +1,6 @@
 <?php
 
-class IsolateSandbox {
+class IsolateJail {
   private float $timeLimit;     // seconds
   private float $wallTimeLimit; // seconds
   private int $memoryLimit;     // kilobytes
@@ -39,20 +39,20 @@ class IsolateSandbox {
     $fileName = $this->fullPath($fileName);
     $res = file_put_contents($fileName, $contents);
     if ($res === false) {
-      throw new IsolateSandboxException('Could not write file inside isolate box.');
+      throw new IsolateJailException('Could not write file inside isolate box.');
     }
   }
 
   private function copyWithPermissions(string $src, string $dest): void {
     if (!@copy($src, $dest)) {
-      throw new IsolateSandboxException('Could not copy file to/from isolate box.');
+      throw new IsolateJailException('Could not copy file to/from isolate box.');
     }
     $perms = fileperms($src);
     if ($perms === false) {
-      throw new IsolateSandboxException('Could not access source file permissions.');
+      throw new IsolateJailException('Could not access source file permissions.');
     }
     if (!chmod($dest, $perms)) {
-      throw new IsolateSandboxException('Could not set file permissions.');
+      throw new IsolateJailException('Could not set file permissions.');
     }
   }
 
@@ -117,7 +117,7 @@ class IsolateSandbox {
   function run(string $cmd, string $cmdArgs, array $mounts,
                array $env): IsolateResult {
     if (!$this->timeLimit || !$this->memoryLimit) {
-      throw new IsolateSandboxException('Missing time or memory limit.');
+      throw new IsolateJailException('Missing time or memory limit.');
     }
 
     $time = number_format($this->timeLimit, 3); // sprintf is locale-aware and uses ','
@@ -156,7 +156,7 @@ class IsolateSandbox {
     $full = $this->fullPath($filename);
     $data = file_get_contents($full);
     if ($data === false) {
-      throw new IsolateSandboxException('Could not read stdout from isolate.');
+      throw new IsolateJailException('Could not read stdout from isolate.');
     }
     return $data;
   }
