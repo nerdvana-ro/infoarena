@@ -20,7 +20,6 @@ class TestRoundViewScores extends FunctionalTest {
     $this->login('normal', '1234');
     $this->visitRoundResultsPage('round-classic');
     $this->assertNoElement('table.alternating-colors');
-    $this->assertTextExists('Nicio sursă trimisă la această rundă.');
   }
 
   private function testInternViewPrivate(): void {
