@@ -3,12 +3,12 @@
 class TestBenchmark {
   private array $test;
   private NewResult $result;
-  private ClassicGrader $grader;
+  private ClassicJudge $judge;
   private Database $db;
 
-  function __construct(array& $test, ClassicGrader $grader, Database $db) {
+  function __construct(array& $test, ClassicJudge $judge, Database $db) {
     $this->test = $test;
-    $this->grader = $grader;
+    $this->judge = $judge;
     $this->db = $db;
     WorkStack::setTest($test);
   }
@@ -25,7 +25,7 @@ class TestBenchmark {
   }
 
   private function executeTest(): ?TimePair {
-    $this->result = $this->grader->runTest();
+    $this->result = $this->judge->runTest();
     if ($this->result->status == NewResult::ST_OTHER) {
       $this->reportIgnoredAfterRun();
       return null;
@@ -74,7 +74,7 @@ class TestBenchmark {
 
   private function reportUnusableTest(int $action): void {
     $verdict = TestAction::getVerdict($action);
-    $fmt = 'Test #%02d: %s (points: %d, time: %g, grader message: %s)';
+    $fmt = 'Test #%02d: %s (points: %d, time: %g, judge message: %s)';
     $args = [
       WorkStack::getTestNo(),
       $verdict,

@@ -2,7 +2,7 @@
 
 require_once Config::ROOT . 'common/task.php';
 
-class ClassicGrader {
+class ClassicJudge {
 
   private Job $job;
   private Task $task;

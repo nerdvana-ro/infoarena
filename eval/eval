@@ -15,7 +15,7 @@ require_once(Config::ROOT.'common/db/user.php');
 require_once(Config::ROOT.'common/db/task_statistics.php');
 
 require_once(Config::ROOT.'eval/Exceptions.php');
-require_once(Config::ROOT.'eval/ClassicGrader.php');
+require_once(Config::ROOT.'eval/ClassicJudge.php');
 
 require_once __DIR__ . '/../lib/Core.php';
 
@@ -41,7 +41,7 @@ function job_handle($job) {
   // Make the grader and execute it.
   log_print("Job #{$job->id} task {$task->id} round {$job->round_id} type {$task->type}");
   if ($task->type == 'classic') {
-    $grader = new ClassicGrader($job, $task);
+    $grader = new ClassicJudge($job, $task);
   } else {
     log_error("Nu știu să evaluez task-uri de tip {$task->type}.");
   }
