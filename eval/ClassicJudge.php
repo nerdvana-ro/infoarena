@@ -121,7 +121,7 @@ class ClassicJudge {
     }
   }
 
-  private function copyOutputFiles(IsolateSandbox $iso, int $testNo): void {
+  private function copyOutputFiles(IsolateJail $iso, int $testNo): void {
     $dir = $this->getTestSaveDir($testNo);
     mkdir ($dir, 0700);
     $outFile = $this->task->id . '.out';
@@ -136,14 +136,14 @@ class ClassicJudge {
     foreach ($files as $remote => $local) {
       try {
         $iso->pullFile($remote, $dir . $local);
-      } catch (IsolateSandboxException $ignored) {
+      } catch (IsolateJailException $ignored) {
         // Don't make a fuss. In particular, the output file may not exist in
         // all non-success cases (TLE, MLE etc.).
       }
     }
   }
 
-  private function copyGraderOutputFiles(IsolateSandbox $iso, int $testNo): void {
+  private function copyGraderOutputFiles(IsolateJail $iso, int $testNo): void {
     $dir = $this->getTestSaveDir($testNo);
     $iso->pullFile(Config::ISOLATE_STDOUT, $dir . 'grader-stdout');
     $iso->pullFile(Config::ISOLATE_STDERR, $dir . 'grader-stderr');
@@ -152,7 +152,7 @@ class ClassicJudge {
   // Runs the user binary on one test case. Returns the meta information from
   // isolate.
   private function runTest(int $testNo): IsolateResult {
-    $iso = new IsolateSandbox();
+    $iso = new IsolateJail();
     $iso->pushFile($this->getUserBin());
     $this->downloadInFile($testNo);
     $iso->setTimeLimit($this->task->getTimeLimit());
@@ -190,7 +190,7 @@ class ClassicJudge {
 
   // $res = result from the user binary isolate box.
   private function runCustomGrader(int $testNo, IsolateResult $res): EvalTestResult {
-    $iso = new IsolateSandbox();
+    $iso = new IsolateJail();
 
     if (Config::EVAL_GRADER_NEEDS_SOURCE) {
       $dest = $this->task->id . '.' . $this->getUserExtension();
@@ -306,7 +306,7 @@ class ClassicJudge {
     }
   }
 
-  public function grade() {
+  public function run() {
     try {
       $this->result->setPending();
       $this->cleanSaveDir();
@@ -314,7 +314,7 @@ class ClassicJudge {
       $this->compileGrader();
       $this->judgeTestGroups();
       $this->finalize();
-    } catch (IsolateSandboxException $e) {
+    } catch (IsolateJailException $e) {
       throw new EvalSystemError($e->getMessage());
     }
 
