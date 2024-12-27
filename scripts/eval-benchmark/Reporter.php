@@ -24,8 +24,8 @@ class Reporter {
 
   function run() {
     foreach ($this->tasks as $task) {
-      $cp = $this->checkpointer->readTask($task['id']);
-      $this->processCheckpoint($task['id'], $task['params']['timelimit'], $cp);
+      $cp = $this->checkpointer->readTask($task->id);
+      $this->processCheckpoint($task->id, $task->getTimeLimit(), $cp);
     }
 
     $this->reportExceptions('Skipped tasks', $this->skippedTasks);

@@ -18,8 +18,7 @@ class Checkpointer {
   }
 
   function writeTask(TaskBenchmark $tb): void {
-    $task = $tb->getTask();
-    $taskId = $task['id'];
+    $taskId = $tb->getTask()->id;
     $cp = $tb->getCheckpoint();
 
     $this->writeTaskCheckpoint($taskId, $cp);

@@ -8,8 +8,7 @@ class TaskBenchmark {
 
   private Checkpointer $checkpointer;
   private Database $db;
-  private array $task;
-  private Task $taskObj;
+  private Task $task;
   private bool $batchMode;
   private int $numJobs, $numAdminJobs;
   private array $jobs;
@@ -19,9 +18,8 @@ class TaskBenchmark {
 
   private TaskCheckpoint $cp;
 
-  function __construct(array $task, Database $db, Checkpointer $checkpointer, bool $batchMode) {
+  function __construct(Task $task, Database $db, Checkpointer $checkpointer, bool $batchMode) {
     $this->task = $task;
-    $this->taskObj = Task::get_by_id($task['id']);
     $this->db = $db;
     $this->checkpointer = $checkpointer;
     $this->batchMode = $batchMode;
@@ -30,7 +28,7 @@ class TaskBenchmark {
     WorkStack::setTask($this->task);
   }
 
-  function getTask(): array {
+  function getTask(): Task {
     return $this->task;
   }
 
@@ -53,16 +51,16 @@ class TaskBenchmark {
   }
 
   private function printHeader() {
-    $maxFile = $this->taskObj->getLargestInputFile();
+    $maxFile = $this->task->getLargestInputFile();
     $messages = [
       sprintf('Task:               %s (%d/%d)',
-              $this->task['id'],
+              $this->task->id,
               WorkStack::getTaskNo(),
               WorkStack::getTaskCount()),
       sprintf('URL:                https://www.nerdarena.ro/problema/%s',
-              $this->task['id']),
+              $this->task->id),
       sprintf('Number of tests:    %d',
-              $this->task['test_count']),
+              $this->task->test_count),
       sprintf('Largest input:      %d bytes',
               $maxFile),
       sprintf('Time limit:         %g s',
@@ -87,7 +85,7 @@ class TaskBenchmark {
   }
 
   private function loadCheckpoint(): void {
-    $cp = $this->checkpointer->readTask($this->task['id']);
+    $cp = $this->checkpointer->readTask($this->task->id);
     if ($cp != null) {
       $this->cp = $cp;
       $this->logCheckpointInfo();
@@ -112,8 +110,8 @@ class TaskBenchmark {
   }
 
   private function countJobs(): void {
-    $this->numJobs = $this->db->countJobs($this->task['id']);
-    $this->numAdminJobs = $this->db->countAdminJobs($this->task['id']);
+    $this->numJobs = $this->db->countJobs($this->task->id);
+    $this->numAdminJobs = $this->db->countAdminJobs($this->task->id);
   }
 
   private function needsFullBenchmark(): bool {
@@ -250,11 +248,11 @@ class TaskBenchmark {
   }
 
   private function loadAllJobs(): void {
-    $this->jobs = $this->db->loadAllJobs($this->task['id']);
+    $this->jobs = $this->db->loadAllJobs($this->task->id);
   }
 
   private function loadAdminJobs(): void {
-    $this->jobs = $this->db->loadAdminJobs($this->task['id']);
+    $this->jobs = $this->db->loadAdminJobs($this->task->id);
   }
 
   private function benchmarkJobs(): void {
@@ -263,8 +261,8 @@ class TaskBenchmark {
 
     foreach ($this->jobs as $job) {
       $jb = new JobBenchmark($job, $this->db);
-      $jobTimePairs = $jb->run();
-      array_push($this->cp->timePairs, ...$jobTimePairs);
+      $jb->run();
+      array_push($this->cp->timePairs, ...$jb->getTimePairs());
     }
 
     $this->cp->benchmarked = true;

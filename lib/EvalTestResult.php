@@ -8,13 +8,14 @@ class EvalTestResult {
   public ?int $graderTime;
   public ?int $graderMemory;
 
-  function __construct(int $score, string $message, int $time, int $memory,
-                       ?int $graderTime, ?int $graderMemory) {
+  function __construct(int $score, string $message, float $time, int $memory,
+                       ?float $graderTime, ?int $graderMemory) {
     $this->score = $score;
     $this->message =  $message;
-    $this->time = $time;
+    $this->time = round($time * 1000);
     $this->memory = $memory;
-    $this->graderTime = $graderTime;
+    $this->graderTime = ($graderTime === null)
+      ? null : round($graderTime * 1000);
     $this->graderMemory = $graderMemory;
   }
 }
