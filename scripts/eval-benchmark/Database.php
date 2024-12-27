@@ -39,44 +39,53 @@ class Database {
   }
 
   function loadTasks(): array {
-    $tasks = task_get_all();
-
-    foreach ($tasks as &$task) {
-      $task['params'] = $this->getTaskParams($task['id']);
-    }
-
-    return $tasks;
+    return Model::factory('Task')
+      ->order_by_asc('id')
+      ->find_many();
   }
 
-  function loadTaskById(string $id): array {
-    $task = task_get($id);
+  function loadTaskById(string $id): Task {
+    $task = Task::get_by_id($id);
     if (!$task) {
       throw new BException('Task %s not found.', [ $id ]);
     }
-    $task['params'] = $this->getTaskParams($id);
     return $task;
   }
 
-  private function getTaskParams(string $taskId): array {
-    return task_get_parameters($taskId);
+  function getAdminJobsQuery(string $taskId): ORMWrapper {
+    $userIds = array_keys($this->adminMap);
+    return Model::factory('Job')
+      ->where('task_id', $taskId)
+      ->where('status', 'done')
+      ->where_in('user_id', $userIds);
   }
 
   function loadAdminJobs(string $taskId): array {
-    return job_get_by_task_id_user_ids_status(
-      $taskId, array_keys($this->adminMap), 'done');
+    return $this->getAdminJobsQuery($taskId)
+      ->order_by_asc('id')
+      ->find_many();
   }
 
   function countAdminJobs(string $taskId): int {
-    return job_count_by_task_id_user_ids_status(
-      $taskId, array_keys($this->adminMap), 'done');
+    return $this->getAdminJobsQuery($taskId)
+      ->count();
+  }
+
+  function getAllJobsQuery(string $taskId): ORMWrapper {
+    return Model::factory('Job')
+      ->where('task_id', $taskId)
+      ->where('status', 'done');
   }
 
   function loadAllJobs(string $taskId): array {
-    return job_get_by_task_id_status($taskId, 'done');
+    return $this->getAllJobsQuery($taskId)
+      ->order_by_asc('id')
+      ->find_many();
   }
 
   function countJobs(string $taskId): int {
-    return job_count_by_task_id_status($taskId, 'done');
+    return $this->getAllJobsQuery($taskId)
+      ->count();
   }
 
   function loadTests(int $jobId): array {

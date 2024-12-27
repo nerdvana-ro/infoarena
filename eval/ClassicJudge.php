@@ -9,11 +9,20 @@ class ClassicJudge {
   private string $saveDir;
   private EvalResult $result;
 
+  // When true, prevent changes to the database. Still allows changes under
+  // EVAL_SAVE_DIR.
+  private bool $dryRun;
+
   public function __construct(Job $job, Task $task) {
     $this->task = $task;
     $this->job = $job;
     $this->saveDir = sprintf(Config::EVAL_SAVE_DIR, $job->id);
     $this->result = new EvalResult();
+    $this->dryRun = false;
+  }
+
+  function setDryRun(): void {
+    $this->dryRun = true;
   }
 
   function getGraderSrc():string {
@@ -151,7 +160,7 @@ class ClassicJudge {
 
   // Runs the user binary on one test case. Returns the meta information from
   // isolate.
-  private function runTest(int $testNo): IsolateResult {
+  protected function runTest(int $testNo): IsolateResult {
     $iso = new IsolateJail();
     $iso->pushFile($this->getUserBin());
     $this->downloadInFile($testNo);
@@ -172,7 +181,7 @@ class ClassicJudge {
       if ($diff_output == '') {
         log_print("Test $testNo: Diff eval: Files identical");
         $msg = 'OK';
-        $score = 100 / $this->task->test_count;
+        $score = floor(100 / $this->task->test_count);
       } else {
         log_print("Test $testNo: Diff eval: Files differ");
         $msg = 'Incorect';
@@ -185,7 +194,7 @@ class ClassicJudge {
     }
 
     return new EvalTestResult(
-      $score, $msg, $res->time * 1000, $res->memory, null, null);
+      $score, $msg, $res->time, $res->memory, null, null);
   }
 
   // $res = result from the user binary isolate box.
@@ -242,7 +251,7 @@ class ClassicJudge {
 
     log_print("Test $testNo: Eval gave {$score} points and said {$msg}");
     return new EvalTestResult(
-      $score, $msg, $res->time * 1000, $res->memory, $gres->time * 1000, $gres->memory);
+      $score, $msg, $res->time, $res->memory, $gres->time, $gres->memory);
   }
 
   // Judge the correctness of the output data
@@ -267,12 +276,7 @@ class ClassicJudge {
       log_print(sprintf($fmt, $testNo, $result->time, $result->memory, $result->message));
 
       return new EvalTestResult(
-        0,
-        $result->message,
-        $result->time * 1000,
-        $result->memory,
-        null,
-        null);
+        0, $result->message, $result->time, $result->memory, null, null);
     }
   }
 
@@ -286,7 +290,9 @@ class ClassicJudge {
       foreach ($group as $testNo) {
         $res = $this->judgeTest($testNo);
         $this->result->testResults[$testNo] = $res;
-        job_test_update($this->job->id, $testNo, $groupIndex + 1, $res);
+        if (!$this->dryRun) {
+          job_test_update($this->job->id, $testNo, $groupIndex + 1, $res);
+        }
         $solvedGroup &= ($res->score > 0);
         $groupScore += $res->score;
       }

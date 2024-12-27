@@ -1,45 +1,34 @@
 <?php
 
-require_once(Config::ROOT . 'eval/ClassicJudge.php');
-require_once(Config::ROOT . 'eval/Exceptions.php');
+require_once Config::ROOT . 'eval/ClassicJudge.php';
 
 class BenchmarkJudge extends ClassicJudge {
-  const JAIL_DIR = Config::ROOT . 'eval/jail/';
+  private array $newResults = [];
 
-  function __construct(array $task, array $job) {
-    // Don't get hung up on memory constraints. They may have to do with
-    // 64- versus 32- bit architectures. Just give the program another MB.
-    $task['params']['memlimit'] += 1024;
-    parent::__construct($task, $task['params'], $job);
+  public function __construct(Job $job, Task $task) {
+    parent::__construct($job, $task);
+    $this->setDryRun();
   }
 
-  /**
-   * Runs the job on a single test. Adapted from ClassicJudge::grade() and
-   * ClassicJudge::testCaseJudge(). Note that, even if a test passed on the
-   * old hardware, it may still fail on the new one (e.g. job #552652).
-   **/
-  function runTest(): NewResult {
-    eval_assert(clean_dir(self::JAIL_DIR), "Can't clean jail dir.");
-    eval_assert(chdir(self::JAIL_DIR), "Can't chdir to jail dir.");
-    $infile = $this->getInFile(self::JAIL_DIR);
-    $info = $this->runTestCase(
-      WorkStack::getTestNo(),
-      self::JAIL_DIR,
-      $infile
-    );
+  // Note that, even if a test passed on the old hardware, it may still fail
+  // on the new one (e.g. job #552652).
+  protected function runTest(int $testNo): IsolateResult {
+    $res = parent::runTest($testNo);
 
-    if ($info['result'] == 'OK') {
+    if ($res->status == IsolateResult::SUCCESS) {
       $status = NewResult::ST_OK;
-    } else if (preg_match('/time limit/i', $info['message']))  {
+    } else if ($res->status = IsolateResult::TLE) {
       $status = NewResult::ST_TLE;
     } else {
       $status = NewResult::ST_OTHER;
     }
 
-    return new NewResult(
-      $status,
-      (float)$info['time'] / 1000,
-      $info['message']
-    );
+    $this->newResults[$testNo] = new NewResult($status, $res->time, $res->message);
+
+    return $res;
+  }
+
+  function getResults(): array {
+    return $this->newResults;
   }
 }

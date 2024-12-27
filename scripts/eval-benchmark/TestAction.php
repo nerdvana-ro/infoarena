@@ -10,30 +10,36 @@ class TestAction {
   // Any tests that scored >= 1 points are assumed to be successful.
   // Partial scores are fine -- we only care about the time limit.
   //
-  // The messages below indicate a TLE status.
+  // The messages below indicate a TLE status. Do not include wall TLE
+  // results. Those often indicate problems unrelated to CPU speed, such as
+  // reading from stdin instead of from a file. In situations like these, the
+  // (real) time will be very small, even though the wall time is large. This
+  // can skew the results.
   const TLE_MESSAGES = [
     'Time limit exceeded',
     'Time limit exceeded.',
-    'Wall time limit exceeded',
-    'Wall time limit exceeded.',
   ];
 
-  /**
-   * Figure out what to do with the current test based on its outcome.
-   **/
-  static function recommend(): int {
+  private array $test;
+
+  function __construct(array $test) {
+    $this->test = $test;
+  }
+
+  // Figure out what to do with the current test based on its outcome.
+  function recommend(): int {
     $timeLimit = WorkStack::getTaskTimeLimit();
-    $time = WorkStack::getTestOldTime();
-    $points = WorkStack::getTestOldPoints();
-    $message = WorkStack::getTestOldMessage();
+    $time = (float)$this->test['exec_time'] / 1000;
+    $points = $this->test['points'];
+    $message = $this->test['grader_message'];
 
     $isInTime = $time < $timeLimit;
     $hasTleMsg = in_array($message, self::TLE_MESSAGES);
 
-    return self::discern($isInTime, $hasTleMsg, $points);
+    return $this->discern($isInTime, $hasTleMsg, $points);
   }
 
-  private static function discern(bool $isInTime, bool $hasTleMsg, int $points): int {
+  private function discern(bool $isInTime, bool $hasTleMsg, int $points): int {
     // 8 cases arise.
     if (($isInTime == $hasTleMsg) ||
         ($points && !$isInTime)) {

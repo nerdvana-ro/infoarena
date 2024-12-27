@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../../Config.php';
 require_once __DIR__ . '/../../common/common.php';
 require_once __DIR__ . '/../../common/log.php';
+require_once __DIR__ . '/../../eval/Exceptions.php';
 require_once __DIR__ . '/../../lib/Core.php';
 
 spl_autoload_register(function($className) {
