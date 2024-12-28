@@ -107,7 +107,7 @@ class Config {
   const ISOLATE_COMMAND = '/usr/local/bin/isolate';
   const ISOLATE_BOX = '/var/local/lib/isolate/0/box/';
   const ISOLATE_META_FILE = self::ISOLATE_BOX . 'meta';
-  const ISOLATE_EXTRA_WALL_TIME_SEC = 2.0;
+  const ISOLATE_EXTRA_WALL_TIME_SEC = 0.5;
   const ISOLATE_STDOUT = 'isolate-stdout';
   const ISOLATE_STDERR = 'isolate-stderr';
 

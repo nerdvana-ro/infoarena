@@ -33,14 +33,16 @@ class EvalDownloader {
       return false;
     }
 
-    $curl = curl_init();
     // Can't use url_attachment here because it's in www.
-    curl_setopt($curl, CURLOPT_URL,
-                Config::URL_HOST . Config::URL_PREFIX .
-                "$page?action=download&file=$file");
-    curl_setopt($curl, CURLOPT_USERPWD, Config::EVAL_USERNAME . ":" . Config::EVAL_PASSWORD);
-    curl_setopt($curl, CURLOPT_FILE, $cachefd);
-    curl_setopt($curl, CURLOPT_FAILONERROR, true);
+    $url = Config::URL_HOST . Config::URL_PREFIX . "$page?action=download&file=$file";
+
+    $curl = curl_init();
+    curl_setopt_array($curl, [
+      CURLOPT_URL => $url,
+      CURLOPT_USERPWD => Config::EVAL_USERNAME . ":" . Config::EVAL_PASSWORD,
+      CURLOPT_FILE => $cachefd,
+      CURLOPT_FAILONERROR => true,
+    ]);
 
     if (!curl_exec($curl)) {
       log_warn("Failed curl download for $page/$file.");
