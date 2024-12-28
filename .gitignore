@@ -1,15 +1,11 @@
 Config.php
-eval/config.php
 
-apache.conf
 www/.htaccess
 
 common/lcs
-jrun/jrun
 
 attach/*
 cache/
-www/static/images/avatar/
 www/static/images/resized/
 
 *~
