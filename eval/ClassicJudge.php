@@ -11,18 +11,26 @@ class ClassicJudge {
 
   // When true, prevent changes to the database. Still allows changes under
   // EVAL_SAVE_DIR.
-  private bool $dryRun;
+  private bool $dryRun = false;
+
+  // When true, give programs an additional megabyte of RAM. Useful when we
+  // want to benchmark running times without getting hung up on memory
+  // constraints, which may have to do with 64- versus 32- bit architectures.
+  private bool $extraMemory = false;
 
   public function __construct(Job $job, Task $task) {
     $this->task = $task;
     $this->job = $job;
     $this->saveDir = sprintf(Config::EVAL_SAVE_DIR, $job->id);
     $this->result = new EvalResult();
-    $this->dryRun = false;
   }
 
   function setDryRun(): void {
     $this->dryRun = true;
+  }
+
+  function setExtraMemory(): void {
+    $this->extraMemory = true;
   }
 
   function getGraderSrc():string {
@@ -165,7 +173,13 @@ class ClassicJudge {
     $iso->pushFile($this->getUserBin());
     $this->downloadInFile($testNo);
     $iso->setTimeLimit($this->task->getTimeLimit());
-    $iso->setMemoryLimit($this->task->getMemoryLimit());
+
+    $memLimit = $this->task->getMemoryLimit();
+    if ($this->extraMemory) {
+      $memLimit += 1024; // 1 MB
+    }
+    $iso->setMemoryLimit($memLimit);
+
     $result = $iso->run('./main', '', [], []);
     $this->copyOutputFiles($iso, $testNo);
     return $result;

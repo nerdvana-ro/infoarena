@@ -8,6 +8,7 @@ class BenchmarkJudge extends ClassicJudge {
   public function __construct(Job $job, Task $task) {
     parent::__construct($job, $task);
     $this->setDryRun();
+    $this->setExtraMemory();
   }
 
   // Note that, even if a test passed on the old hardware, it may still fail
