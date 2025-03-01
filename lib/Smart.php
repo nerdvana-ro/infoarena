@@ -60,6 +60,7 @@ class Smart {
     $s->template_dir = Config::ROOT . 'templates';
     $s->compile_dir = sys_get_temp_dir() . '/templates_c';
     $s->registerPlugin('modifier', 'fullDateTime', 'Time::fullDateTime');
+    $s->registerPlugin('function', 'get_execution_stats_log', 'get_execution_stats_log');
     $s->registerPlugin('modifier', 'implode', 'implode');
     self::$theSmarty = $s;
     self::registerStaticClasses();

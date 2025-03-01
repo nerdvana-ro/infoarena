@@ -6,19 +6,19 @@
     </li>
 
     <li class="separate">
-      <a href="{url_textblock(Config::ABOUT_PAGE)}">
+      <a href="{Config::URL_PREFIX}{Config::ABOUT_PAGE}">
         Despre {Config::SITE_NAME}
       </a>
     </li>
 
     <li>
-      <a href="{url_textblock('termeni-si-conditii')}">
+      <a href="{Config::URL_PREFIX}termeni-si-conditii">
         Termeni și condiții
       </a>
     </li>
 
     <li>
-      <a href="{url_textblock('contact')}">
+      <a href="{Config::URL_PREFIX}contact">
         Contact
       </a>
     </li>
@@ -49,7 +49,7 @@
 
   {if Config::DEVELOPMENT_MODE}
     <textarea id="log" rows="50" cols="80">
-      {get_execution_stats_log()}
+      {get_execution_stats_log}
     </textarea>
   {/if}
 </div>
