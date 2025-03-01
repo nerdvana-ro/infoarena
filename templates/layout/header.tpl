@@ -22,7 +22,7 @@
 
         <a
           class="logout"
-          href="javascript:PostData('{url_logout()}', [])">
+          href="javascript:PostData('{Config::URL_PREFIX}logout', [])">
           logout
         </a>
         |

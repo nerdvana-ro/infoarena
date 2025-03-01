@@ -82,6 +82,10 @@ class User extends Base {
     return url_user_rating($username);
   }
 
+  function getRatingBadge(): RatingBadge {
+    return new RatingBadge($this->username, $this->rating_cache);
+  }
+
   function isAdmin(): bool {
     return $this->security_level == 'admin';
   }
@@ -117,6 +121,10 @@ class User extends Base {
     }
 
     return $query->find_many();
+  }
+
+  static function countAll(): int {
+    return Model::factory('User')->count();
   }
 
 }

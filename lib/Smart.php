@@ -62,6 +62,17 @@ class Smart {
     $s->registerPlugin('modifier', 'fullDateTime', 'Time::fullDateTime');
     $s->registerPlugin('modifier', 'implode', 'implode');
     self::$theSmarty = $s;
+    self::registerStaticClasses();
+  }
+
+  private static function registerStaticClasses(): void {
+    $registeredClasses = [
+      'Config', 'FlashMessage', 'Identity', 'Preload', 'RecentPage',
+      'RoundTaskTableParams', 'StarRating', 'User', 'Wiki',
+    ];
+    foreach ($registeredClasses as $class) {
+      self::$theSmarty->registerClass($class, $class);
+    }
   }
 
   private static function collectResourcesWithDeps(): array {
@@ -138,9 +149,7 @@ class Smart {
     $jsFiles = self::makeRelativeUrls($jsFiles);
     $identity = Identity::get();
 
-    $ratingBadge = $identity
-      ? new RatingBadge($identity->username, $identity->rating_cache)
-      : null;
+    $ratingBadge = $identity ? $identity->getRatingBadge() : null;
 
     $numReports = Identity::isAdmin()
       ? ReportUtil::getCachedTotal()

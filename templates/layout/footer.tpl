@@ -35,7 +35,7 @@
       rel="license">
       <img
         alt="Creative Commons License"
-        src="{url_static('images/creative-commons.png')}">
+        src="{Config::URL_PREFIX}static/images/creative-commons.png">
     </a>
 
     Cu excepția cazurilor în care se specifică altfel, conținutul site-ului

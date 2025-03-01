@@ -8,7 +8,7 @@
 {elseif !$task->isViewable()}
   ...
 {else}
-  <a href="{url_task($task->id)}">
+  <a href="{Config::URL_PREFIX}problema/{$task->id}">
     {$task->title}
   </a>
 {/if}
