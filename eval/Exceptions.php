@@ -6,7 +6,7 @@ abstract class EvalException extends Exception {
 
 final class EvalSystemError extends EvalException {
     public function __construct($message, $code = 0,
-                                Exception $previous = null) {
+                                ?Exception $previous = null) {
         parent::__construct("Contactează un administrator\n" . $message,
                             $code, $previous);
     }
@@ -18,7 +18,7 @@ final class EvalSystemError extends EvalException {
 
 final class EvalTaskOwnerError extends EvalException {
     public function __construct($message, $code = 0,
-                                Exception $previous = null) {
+                                ?Exception $previous = null) {
         parent::__construct("Contactează autorul problemei:\n" . $message,
                             $code, $previous);
     }
@@ -30,7 +30,7 @@ final class EvalTaskOwnerError extends EvalException {
 
 final class EvalUserCompileError extends EvalException {
     public function __construct($message, $code = 0,
-                                Exception $previous = null) {
+                                ?Exception $previous = null) {
         parent::__construct("Eroare de compilare:\n" . $message,
                             $code, $previous);
     }
