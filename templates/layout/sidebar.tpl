@@ -80,6 +80,5 @@
   </p>
 
   <div class="user-count" id="srv_time"></div>
-  <script>loadTime({format_date(null, 'HH, mm, ss')});</script>
 
 </div>
