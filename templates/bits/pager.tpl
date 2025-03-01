@@ -1,1 +1,0 @@
-{format_pager($pagerOptions)}

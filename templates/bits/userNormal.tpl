@@ -10,7 +10,7 @@
 
   <div class="fullname">{$user->full_name}</div>
 
-  {format_user_ratingbadge($user->username, $user->rating_cache)}
+  {include "bits/ratingBadge.tpl" rb=$user->getRatingBadge()}
 
   <a class="username" href="{$user->getProfileUrl()}">
     {$user->username}

@@ -57,6 +57,10 @@ class Job extends Base {
     }
   }
 
+  function getViewSourceUrl(): string {
+    return url_job_view_source($this->id);
+  }
+
   function isDone(): bool {
     return $this->status == 'done';
   }
