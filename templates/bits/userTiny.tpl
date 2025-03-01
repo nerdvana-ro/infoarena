@@ -13,7 +13,7 @@
 
   {if $showRating}
     <span>
-      {format_user_ratingbadge($user->username, $user->rating_cache)}
+      {include "bits/ratingBadge.tpl" rb=$user->getRatingBadge()}
     </span>
   {/if}
 

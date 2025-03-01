@@ -227,7 +227,6 @@ function logging_error_handler($errno, $errstr, $errfile, $errline) {
     'E_CORE_WARNING'       => 'Core Warning: ',
     'E_COMPILE_ERROR'      => 'Compile Error: ',
     'E_COMPILE_WARNING'    => 'Compile Warning: ',
-    'E_STRICT'             => 'Runtime Notice: ',
     'E_USER_ERROR'         => 'Error: ',
     'E_USER_WARNING'       => 'Warning: ',
     'E_USER_NOTICE'        => '',

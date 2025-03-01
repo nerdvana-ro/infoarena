@@ -1,7 +1,7 @@
 {$referrer=$referrer|default:''}
 {$remember=$remember|default:false}
 {$username=$username|default:''}
-<form action="{url_login()|escape}" class="login" method="post">
+<form action="{Config::URL_PREFIX}login" class="login" method="post">
   <input type="hidden" name="referrer" value="{$referrer|escape}">
 
   <table class="form">
@@ -9,7 +9,7 @@
       <td>
         <fieldset>
           <legend>
-            <img src="{url_static('images/icons/login.png')}" alt="!">
+            <img src="{Config::URL_PREFIX}static/images/icons/login.png" alt="!">
             Autentificare
           </legend>
 
