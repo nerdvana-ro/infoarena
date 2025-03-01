@@ -4,7 +4,7 @@
  * Wrapper around Smarty, the template engine.
  */
 
-require_once 'third-party/smarty-4.3.0/Smarty.class.php';
+require_once 'third-party/smarty-4.5.5/Smarty.class.php';
 require_once __DIR__ . '/../www/format/format.php';
 
 class Smart {
