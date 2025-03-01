@@ -26,7 +26,13 @@
   <h1>Monitorul de evaluare</h1>
 
   {if count($tabs) > 1}
-    {format_ul($tabs, 'htabs')}
+    <ul class="htabs">
+      {foreach $tabs as $tab}
+        <li {if $tab.active}class="active"{/if}>
+          {$tab.link}
+        </li>
+      {/foreach}
+    </ul>
   {/if}
 
   <div id="monitor-table">

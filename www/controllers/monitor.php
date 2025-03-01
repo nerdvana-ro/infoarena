@@ -26,12 +26,13 @@ function controller_monitor() {
     'total_entries' => $jobCount,
     'url_args' => $jobFilters->asArray() + [ 'page' => 'monitor' ],
   ];
+  $pagerHtml = format_pager($pagerOptions);
 
   RecentPage::addCurrentPage('Monitorul de evaluare');
   Smart::assign([
     'jobCount' => $jobCount,
     'jobs' => $jobs,
-    'pagerOptions' => $pagerOptions,
+    'pagerHtml' => $pagerHtml,
     'showReevalForm' => showReevalForm($jobCount),
     'showSkips' => Identity::isAdmin(),
     'tabs' => makeTabs($jobFilters->asArray()),
@@ -55,14 +56,20 @@ function makeTabs(array $filters): array {
   $user = getattr($filters, 'user');
   if ($me) {
     $tabFilters = [ 'user' => $me ];
-    $tabs['mine'] = format_link(url_monitor($tabFilters), 'Soluțiile mele');
+    $tabs['mine'] = [
+      'link' => format_link(url_monitor($tabFilters), 'Soluțiile mele'),
+      'active' => false,
+    ];
     if ($me == $user) {
       $selected = 'mine';
     }
   }
 
   // all jobs tab
-  $tabs['all'] = format_link(url_monitor(), 'Toate soluțiile');
+  $tabs['all'] = [
+    'link' => format_link(url_monitor(), 'Toate soluțiile'),
+    'active' => false,
+  ];
   if (is_null($selected)) {
     $selected = 'all';
   }
@@ -70,10 +77,13 @@ function makeTabs(array $filters): array {
   // custom user tab
   if ($user && ($user != $me)) {
     $tabFilters = [ 'user' => $user ];
-    $tabs['custom'] = format_link(url_monitor($tabFilters), "Trimise de {$user}");
+    $tabs['custom'] = [
+      'link' => format_link(url_monitor($tabFilters), "Trimise de {$user}"),
+      'active' => false,
+    ];
     $selected = 'custom';
   }
 
-  $tabs[$selected] = [ $tabs[$selected], ['class' => 'active'] ];
+  $tabs[$selected]['active'] = true;
   return $tabs;
 }

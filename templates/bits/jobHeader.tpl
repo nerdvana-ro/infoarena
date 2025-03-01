@@ -35,7 +35,7 @@
       {if $job->isSourceViewable()}
         |
         {if $showSourceLink}
-          <a href="{url_job_view_source($job->id)}">
+          <a href="{$job->getViewSourceUrl()}">
             vezi sursa
           </a>
         {else}

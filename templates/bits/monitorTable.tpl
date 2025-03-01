@@ -3,7 +3,7 @@
     Nici o soluție în coada de evaluare.
   </div>
 {else}
-  {include "bits/pager.tpl"}
+  {$pagerHtml}
 
   <table class="alternating-colors monitor">
     <thead>
@@ -55,7 +55,7 @@
     </tbody>
   </table>
 
-  {include "bits/pager.tpl"}
+  {$pagerHtml}
 
   {if $showSkips}
     <div class="skip-job">
