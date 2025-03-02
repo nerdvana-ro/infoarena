@@ -89,7 +89,7 @@ class RemoteWebDriver implements WebDriver, JavaScriptExecutor, WebDriverHasInpu
         $request_timeout_in_ms = null,
         $http_proxy = null,
         $http_proxy_port = null,
-        DesiredCapabilities $required_capabilities = null
+        ?DesiredCapabilities $required_capabilities = null
     ) {
         $selenium_server_url = preg_replace('#/+$#', '', $selenium_server_url);
 
@@ -219,10 +219,6 @@ class RemoteWebDriver implements WebDriver, JavaScriptExecutor, WebDriverHasInpu
             JsonWireCompat::getUsing($by, $this->isW3cCompliant)
         );
 
-        if ($raw_element === null) {
-            throw UnexpectedResponseException::forError('Unexpected server response to findElement command');
-        }
-
         return $this->newElement(JsonWireCompat::getElement($raw_element));
     }
 
@@ -239,8 +235,8 @@ class RemoteWebDriver implements WebDriver, JavaScriptExecutor, WebDriverHasInpu
             JsonWireCompat::getUsing($by, $this->isW3cCompliant)
         );
 
-        if ($raw_elements === null) {
-            throw UnexpectedResponseException::forError('Unexpected server response to findElements command');
+        if (!is_array($raw_elements)) {
+            throw UnexpectedResponseException::forError('Server response to findElements command is not an array');
         }
 
         $elements = [];

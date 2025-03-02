@@ -12,17 +12,7 @@ use Facebook\WebDriver\Remote\RemoteWebDriver;
  */
 abstract class LocalWebDriver extends RemoteWebDriver
 {
-    /**
-     * @param string $selenium_server_url
-     * @param null $desired_capabilities
-     * @param null $connection_timeout_in_ms
-     * @param null $request_timeout_in_ms
-     * @param null $http_proxy
-     * @param null $http_proxy_port
-     * @throws LogicException
-     * @return RemoteWebDriver
-     * @todo Remove in next major version (should not be inherited)
-     */
+    // @todo Remove in next major version (should not be inherited)
     public static function create(
         $selenium_server_url = 'http://localhost:4444/wd/hub',
         $desired_capabilities = null,
@@ -30,20 +20,12 @@ abstract class LocalWebDriver extends RemoteWebDriver
         $request_timeout_in_ms = null,
         $http_proxy = null,
         $http_proxy_port = null,
-        DesiredCapabilities $required_capabilities = null
+        ?DesiredCapabilities $required_capabilities = null
     ) {
         throw LogicException::forError('Use start() method to start local WebDriver.');
     }
 
-    /**
-     * @param string $session_id
-     * @param string $selenium_server_url
-     * @param null $connection_timeout_in_ms
-     * @param null $request_timeout_in_ms
-     * @throws LogicException
-     * @return RemoteWebDriver
-     * @todo Remove in next major version (should not be inherited)
-     */
+    // @todo Remove in next major version (should not be inherited)
     public static function createBySessionID(
         $session_id,
         $selenium_server_url = 'http://localhost:4444/wd/hub',
