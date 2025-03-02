@@ -37,8 +37,7 @@ class TestTaskCreateAndDelete extends FunctionalTest {
     $this->visitTaskPage('new-task');
     $this->clickLinkByText('Editează');
     $this->clickLinkByText('Parametri');
-    $this->clickButton('Șterge problema');
-    $this->acceptConfirmationPopup();
+    $this->clickButtonAndAcceptPopup('Șterge problema');
     $this->waitForPageLoad($this->homepageUrl);
     $this->assertTextExists('Am șters problema.');
   }

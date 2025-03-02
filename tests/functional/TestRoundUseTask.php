@@ -38,8 +38,7 @@ class TestRoundUseTask extends FunctionalTest {
 
     $this->deleteRelatedTextblocks();
 
-    $this->clickButton('Șterge runda, Forever...');
-    $this->acceptConfirmationPopup();
+    $this->clickButtonAndAcceptPopup('Șterge runda, Forever...');
     $this->waitForPageLoad($this->homepageUrl);
     $this->assertTextExists('Am șters runda.');
   }
@@ -49,8 +48,7 @@ class TestRoundUseTask extends FunctionalTest {
     $checkboxes->selectByIndex(0);
     $checkboxes->selectByIndex(1);
 
-    $this->clickButton('Șterge paginile');
-    $this->acceptConfirmationPopup();
+    $this->clickButtonAndAcceptPopup('Șterge paginile');
     $this->waitForPageTitle('Ștergere textblockuri corelate cu new-round');
   }
 }

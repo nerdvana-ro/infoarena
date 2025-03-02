@@ -224,94 +224,104 @@ abstract class FunctionalTest {
     return trim($str, '#');
   }
 
+  protected function assertNoPhpErrors(): void {
+    $this->assertNoText('Deprecated:');
+    $this->assertNoText('Fatal:');
+  }
+
+  protected function visitPage(string $page): void {
+    $this->driver->get($page);
+    $this->assertNoPhpErrors();
+  }
+
   protected function visitAttachmentList(string $page): void {
-    $this->driver->get(Config::URL_HOST . url_attachment_list($page));
+    $this->visitPage(Config::URL_HOST . url_attachment_list($page));
   }
 
   protected function visitChangesPage(): void {
-    $this->driver->get(Config::URL_HOST . url_changes());
+    $this->visitPage(Config::URL_HOST . url_changes());
   }
 
   protected function visitHomePage(): void {
-    $this->driver->get($this->homepageUrl);
+    $this->visitPage($this->homepageUrl);
   }
 
   protected function visitJobPage(int $jobId): void {
-    $this->driver->get(Config::URL_HOST . url_job_detail($jobId));
+    $this->visitPage(Config::URL_HOST . url_job_detail($jobId));
   }
 
   protected function visitJobSourcePage(int $jobId): void {
-    $this->driver->get(Config::URL_HOST . url_job_view_source($jobId));
+    $this->visitPage(Config::URL_HOST . url_job_view_source($jobId));
   }
 
   protected function visitMonitorPage(): void {
-    $this->driver->get(Config::URL_HOST . url_monitor());
+    $this->visitPage(Config::URL_HOST . url_monitor());
   }
 
   protected function visitRoundPage(string $roundId): void {
-    $this->driver->get(Config::URL_HOST . url_round($roundId));
+    $this->visitPage(Config::URL_HOST . url_round($roundId));
   }
 
   protected function visitRoundEditPage(string $roundId): void {
-    $this->driver->get(Config::URL_HOST . url_round_edit($roundId));
+    $this->visitPage(Config::URL_HOST . url_round_edit($roundId));
   }
 
   protected function visitRoundResultsPage(string $roundId): void {
-    $this->driver->get(Config::URL_HOST . url_round($roundId) . '/clasament');
+    $this->visitPage(Config::URL_HOST . url_round($roundId) . '/clasament');
   }
 
   protected function visitSubmitPage(): void {
-    $this->driver->get(Config::URL_HOST . url_submit());
+    $this->visitPage(Config::URL_HOST . url_submit());
   }
 
   protected function visitTagManagerPage(): void {
-    $this->driver->get(Config::URL_HOST . url_task_tags());
+    $this->visitPage(Config::URL_HOST . url_task_tags());
   }
 
   protected function visitTaskPage(string $taskId): void {
-    $this->driver->get(Config::URL_HOST . url_task($taskId));
+    $this->visitPage(Config::URL_HOST . url_task($taskId));
   }
 
   protected function visitTaskEditPage(string $taskId): void {
-    $this->driver->get(Config::URL_HOST . url_task_edit($taskId));
+    $this->visitPage(Config::URL_HOST . url_task_edit($taskId));
   }
 
   protected function visitTextblockPage(string $page): void {
-    $this->driver->get(Config::URL_HOST . url_textblock($page));
+    $this->visitPage(Config::URL_HOST . url_textblock($page));
   }
 
   protected function visitTextblockAttachPage(string $page): void {
-    $this->driver->get(Config::URL_HOST . url_attachment_new($page));
+    $this->visitPage(Config::URL_HOST . url_attachment_new($page));
   }
 
   protected function visitTextblockEditPage(string $page): void {
-    $this->driver->get(Config::URL_HOST . url_textblock_edit($page));
+    $this->visitPage(Config::URL_HOST . url_textblock_edit($page));
   }
 
   protected function visitTextblockHistoryPage(string $page): void {
-    $this->driver->get(Config::URL_HOST . url_textblock_history($page));
+    $this->visitPage(Config::URL_HOST . url_textblock_history($page));
   }
 
   protected function visitTextblockMovePage(string $page): void {
-    $this->driver->get(Config::URL_HOST . url_textblock_move($page));
+    $this->visitPage(Config::URL_HOST . url_textblock_move($page));
   }
 
   protected function visitTextblockRestorePage(string $page, int $version): void {
-    $this->driver->get(Config::URL_HOST . url_textblock_restore($page, $version));
+    $this->visitPage(Config::URL_HOST . url_textblock_restore($page, $version));
   }
 
   protected function visitUserProfile(string $username): void {
-    $this->driver->get(url_user_profile($username));
+    $this->visitPage(url_user_profile($username));
   }
 
   protected function visitUserAccount(string $username): void {
     $url = Config::URL_HOST . url_account($username);
-    $this->driver->get($url);
+    $this->visitPage($url);
   }
 
   protected function visitOwnAccount(): void {
     $url = Config::URL_HOST . url_account();
-    $this->driver->get($url);
+    $this->visitPage($url);
   }
 
   protected function waitForPageLoad(string $url): void {
@@ -330,15 +340,36 @@ abstract class FunctionalTest {
     $this->driver->wait(5, 200)->until($cond);
   }
 
+  protected function acceptConfirmationPopup(): void {
+    $this->driver->switchTo()->alert()->accept();
+  }
+
   protected function clickLinkByText(string $text): void {
     $link = $this->getLinkByText($text);
     $link->click();
+    $this->assertNoPhpErrors();
+  }
+
+  protected function clickLinkByTextAndAcceptPopup(string $text): void {
+    $link = $this->getLinkByText($text);
+    $link->click();
+    $this->acceptConfirmationPopup();
+    $this->assertNoPhpErrors();
   }
 
   protected function clickButton(string $value): void {
     $xpath = "//input[@value='{$value}']";
     $input = $this->getElementByXpath($xpath);
     $input->click();
+    $this->assertNoPhpErrors();
+  }
+
+  protected function clickButtonAndAcceptPopup(string $value): void {
+    $xpath = "//input[@value='{$value}']";
+    $input = $this->getElementByXpath($xpath);
+    $input->click();
+    $this->acceptConfirmationPopup();
+    $this->assertNoPhpErrors();
   }
 
   protected function downloadLink(string $linkText, string $fileName): string {
@@ -364,10 +395,6 @@ abstract class FunctionalTest {
   protected function changeSelect(string $css, string $visibleText): void {
     $sel = $this->getSelectByCss($css);
     $sel->selectByVisibleText($visibleText);
-  }
-
-  protected function acceptConfirmationPopup(): void {
-    $this->driver->switchTo()->alert()->accept();
   }
 
   protected function ensureOnSite(): void {

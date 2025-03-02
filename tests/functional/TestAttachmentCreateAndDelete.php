@@ -44,8 +44,7 @@ class TestAttachmentCreateAndDelete extends FunctionalTest {
   private function testAnonCannotDelete(): void {
     $this->ensureLoggedOut();
     $this->visitAttachmentList('page-public');
-    $this->clickLinkByText('Șterge');
-    $this->acceptConfirmationPopup();
+    $this->clickLinkByTextAndAcceptPopup('Șterge');
     $this->waitForPageLoad(url_login());
     $this->assertLoginRequired();
   }
@@ -53,8 +52,7 @@ class TestAttachmentCreateAndDelete extends FunctionalTest {
   private function testHelperCannotDelete(): void {
     $this->login('helper', '1234');
     $this->visitAttachmentList('page-public');
-    $this->clickLinkByText('Șterge');
-    $this->acceptConfirmationPopup();
+    $this->clickLinkByTextAndAcceptPopup('Șterge');
     $this->waitForPageLoad($this->homepageUrl);
     $this->assertPermissionError();
   }
@@ -63,8 +61,7 @@ class TestAttachmentCreateAndDelete extends FunctionalTest {
     $this->login('admin', '1234');
     $this->visitAttachmentList('page-public');
     $this->assertTableCellText('table.alternating-colors', 1, 3, 'file2.txt');
-    $this->clickLinkByText('Șterge');
-    $this->acceptConfirmationPopup();
+    $this->clickLinkByTextAndAcceptPopup('Șterge');
 
     $url = Config::URL_HOST . url_textblock('page-public');
     $this->waitForPageLoad($url);

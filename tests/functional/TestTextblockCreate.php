@@ -36,8 +36,7 @@ class TestTextblockCreate extends FunctionalTest {
   private function deleteAsAdmin(): void {
     $this->login('admin', '1234');
     $this->visitTextblockPage('stuff');
-    $this->clickLinkByText('Șterge');
-    $this->acceptConfirmationPopup();
+    $this->clickLinkByTextAndAcceptPopup('Șterge');
     $this->waitForPageLoad($this->homepageUrl);
     $this->assertTextExists('Am șters pagina.');
   }
