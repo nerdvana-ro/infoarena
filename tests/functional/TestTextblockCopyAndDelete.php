@@ -27,8 +27,7 @@ class TestTextblockCopyAndDelete extends FunctionalTest {
   private function deleteCopyAsAdmin(): void {
     $this->login('admin', '1234');
     $this->visitTextblockPage('page-public-copy');
-    $this->clickLinkByText('Șterge');
-    $this->acceptConfirmationPopup();
+    $this->clickLinkByTextAndAcceptPopup('Șterge');
     $this->waitForPageLoad($this->homepageUrl);
     $this->assertTextExists('Am șters pagina.');
   }

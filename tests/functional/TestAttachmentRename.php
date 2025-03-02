@@ -69,8 +69,7 @@ class TestAttachmentRename extends FunctionalTest {
 
   private function deleteSecondAttachment(): void {
     $this->visitAttachmentList('page-public');
-    $this->clickLinkByText('Șterge');
-    $this->acceptConfirmationPopup();
+    $this->clickLinkByTextAndAcceptPopup('Șterge');
 
     $url = Config::URL_HOST . url_textblock('page-public');
     $this->waitForPageLoad($url);
