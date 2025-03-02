@@ -1,5 +1,6 @@
 {
     "require": {
-        "php-webdriver/webdriver": "^1.15"
+        "php-webdriver/webdriver": "^1.15",
+        "symfony/process": "^7.2"
     }
 }
