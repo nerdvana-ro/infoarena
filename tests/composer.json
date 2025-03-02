@@ -1,6 +1,7 @@
 {
     "require": {
         "php-webdriver/webdriver": "^1.15",
-        "symfony/process": "^7.2"
+        "symfony/process": "^7.2",
+        "symfony/polyfill-mbstring": "^1.31"
     }
 }
