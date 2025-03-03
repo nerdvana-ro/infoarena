@@ -115,8 +115,8 @@ class Config {
    * Settings for the eval system.
    **/
 
-  // Credentials for an admin account used via HTTP AUTH basic to download
-  // tests and graders.
+  // Credentials for an admin account used via basic HTTP authentication to
+  // download tests and graders.
   const EVAL_USERNAME = 'eval';
   const EVAL_PASSWORD = 'eval';
 
