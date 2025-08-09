@@ -12,6 +12,11 @@ require_once Config::ROOT.'www/utilities.php';
 require_once Config::ROOT.'common/db/db.php';
 require_once '../lib/Core.php';
 
+if (Config::MAINTENANCE_MODE) {
+  Smart::display('maintenance.tpl');
+  exit;
+}
+
 db_connect();
 
 $ajax = Request::get('ajax');
@@ -64,7 +69,7 @@ $directmaps = array_flip(array('register', 'changes',
 
 // Trivial direct mappings
 if (isset($directmaps[$urlstart])) {
-    require_once Config::ROOT."www/controllers/{$urlstart}.php";
+    require_once Config::ROOT . "www/controllers/{$urlstart}.php";
     $fname = "controller_{$urlstart}";
     $fname($page_id);
 }

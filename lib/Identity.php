@@ -12,7 +12,7 @@ class Identity {
 
     if ($u && $u->banned) {
       Session::cleanupAndRedirectBannedUser($u);
-    } else if ($u) {
+    } else if ($u && !Config::MAINTENANCE_MODE) {
       self::$user = $u;
       return true;
     } else {

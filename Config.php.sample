@@ -31,6 +31,9 @@ class Config {
   const TIMEZONE = 'Europe/Bucharest';
   const DATE_FORMAT = 'd MMMM yyyy HH:mm:ss';
 
+  // Replace all pages with a "maintenance mode" notice.
+  const MAINTENANCE_MODE = false;
+
   // Activate some debugging tools and disable some external resources.
   const DEVELOPMENT_MODE = true;
 
