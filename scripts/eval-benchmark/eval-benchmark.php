@@ -13,6 +13,9 @@ spl_autoload_register(function($className) {
   }
 });
 
+// For example, we don't want commas as decimal delimiters.
+setlocale(LC_ALL, 'en_US.utf8');
+
 $main = new Main();
 try {
   $main->run();
