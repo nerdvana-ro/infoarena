@@ -1,79 +1,94 @@
 <?php
 
-require_once(Config::ROOT."common/textblock.php");
-require_once(Config::ROOT."common/db/textblock.php");
-require_once(Config::ROOT."common/db/user.php");
+require_once Config::ROOT . 'common/textblock.php';
+require_once Config::ROOT . 'common/db/textblock.php';
+require_once Config::ROOT . 'common/db/user.php';
 
 // View user profile (personal page, rating evolution, statistics)
 // $action is one of (view | rating | stats)
-function controller_user_view($username, $action, $rev_num = null) {
+function controller_user_view(string $username, ?int $revision = null) {
   // validate username
-  $user = user_get_by_username($username);
-  if (!$user) {
-    FlashMessage::addError("Utilizator inexistent.");
-    Util::redirectToHome();
-  }
+  $user = resolve_user($username);
 
   // Build view.
-  $page_name = Config::USER_TEXTBLOCK_PREFIX.$user['username'];
-  $view = array(
-    'title' => $user['full_name'].' ('.$user['username'].')',
-    'page_name' => $page_name,
-    'action' => $action,
-    'user' => $user,
-    'template_userheader' => 'template/userheader',
-  );
+  $pageName = Config::USER_TEXTBLOCK_PREFIX . $user->username;
+  $numRevisions = textblock_get_revision_count($pageName);
 
-  switch ($action) {
-    case 'view':
-      // View personal page
-      $textblock = textblock_get_revision($page_name);
-      // Checks if $rev_num is the latest.
-      $rev_count = textblock_get_revision_count($page_name);
-      if ($rev_num && $rev_num != $rev_count) {
-        if (!is_numeric($rev_num) || (int)$rev_num < 1) {
-          FlashMessage::addError('Revizia "' . $rev_num . '" este invalidă.');
-          redirect(url_textblock($page_name));
-        } else {
-          $rev_num = (int)$rev_num;
-        }
-        Identity::enforceViewTextblock($textblock);
-        $textblock = textblock_get_revision($page_name, $rev_num);
-
-        if (!$textblock) {
-          FlashMessage::addError('Revizia "' . $rev_num . '" nu există.');
-          redirect(url_textblock($page_name));
-        }
-      } else {
-        Identity::enforceViewTextblock($textblock);
-      }
-      log_assert_valid(textblock_validate($textblock));
-      $view['revision'] = $rev_num;
-      $view['revision_count'] = $rev_count;
-      $view['textblock'] = $textblock;
-      $view['title'] = $textblock['title'];
-      break;
-
-    case 'rating':
-      // view rating evolution
-      $view['template'] = 'template/userrating';
-      $view['title'] = 'Rating '.$view['title'];
-      break;
-
-    case 'stats':
-      // view user statistics
-      $view['template'] = 'template/userstats';
-      $view['title'] = 'Statistici '.$view['title'];
-      break;
-
-    default:
-      log_error('Invalid user profile action: '.$action);
+  if ($revision == $numRevisions) {
+    // Get rid of the ?revision=... GET argument.
+    Util::redirectToSelf();
   }
 
-  if (Identity::isAdmin() && $user['banned']) {
+  if ($revision) {
+    if ($revision <= 0) {
+      FlashMessage::addError("Revizia {$revision} este incorectă.");
+      Util::redirectToSelf();
+    }
+
+    $textblock = textblock_get_revision($pageName, $revision);
+
+    if (!$textblock) {
+      FlashMessage::addError('Revizia "' . $revision . '" nu există.');
+      Util::redirectToSelf();
+    }
+
+    FlashMessage::addTemplateWarning('revisionWarning.tpl', [
+      'numRevisions' => $numRevisions,
+      'revision' => $revision,
+      'textblock' => $textblock,
+    ]);
+  } else {
+    $textblock = textblock_get_revision($pageName);
+  }
+
+  Identity::enforceViewTextblock($textblock);
+
+  $recentTitle = sprintf('Profil %s', $user->username);
+  RecentPage::addCurrentPage($recentTitle);
+  Smart::assign([
+    'numRevisions' => $numRevisions,
+    'revision' => $revision,
+    'textblock' => $textblock,
+    'user' => $user,
+    'wikiHtml' => Wiki::processTextblock($textblock),
+  ]);
+  Smart::display('user/view.tpl');
+}
+
+function controller_user_view_rating(string $username): void {
+  $user = resolve_user($username);
+
+  $recentTitle = sprintf('Rating %s (%s)', $user->full_name, $user->username);
+  RecentPage::addCurrentPage($recentTitle);
+  Smart::assign([
+    'rounds' => $user->getRatedRounds(),
+    'user' => $user,
+  ]);
+  Smart::display('user/viewRating.tpl');
+}
+
+function controller_user_view_stats(string $username): void {
+  $user = resolve_user($username);
+
+  $recentTitle = sprintf('Statistici %s (%s)', $user->full_name, $user->username);
+  RecentPage::addCurrentPage($recentTitle);
+  Smart::assign([
+    'rounds' => $user->getSubmittedRounds(),
+    'solvedTasks' => $user->getArchiveTasks(true),
+    'unsolvedTasks' => $user->getArchiveTasks(false),
+    'user' => $user,
+  ]);
+  Smart::display('user/viewStats.tpl');
+}
+
+function resolve_user(string $username): User {
+  $user = User::get_by_username($username);
+  if (!$user) {
+    FlashMessage::addError('Utilizator inexistent.');
+    Util::redirectToHome();
+  }
+  if (Identity::isAdmin() && $user->banned) {
     FlashMessage::addWarning('Acest utilizator este blocat.');
   }
-
-  // View
-  execute_view_die('views/user.php', $view);
+  return $user;
 }

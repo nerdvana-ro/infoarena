@@ -5,18 +5,20 @@ require_once __DIR__ . '/../www/format/format.php';
 
 class RatingBadge {
 
-  private string $username;
+  private User $user;
   private float $rating;
-  private bool $isAdmin;
 
-  function __construct(string $username, float $rating) {
-    $this->username = $username;
+  function __construct(User $user, float $rating) {
+    $this->user = $user;
     $this->rating = rating_scale($rating);
-    $this->isAdmin = user_is_admin(user_get_by_username($username));
+  }
+
+  function getUser(): User {
+    return $this->user;
   }
 
   function getUsername(): string {
-    return $this->username;
+    return $this->user->username;
   }
 
   function getRating(): float {
@@ -24,7 +26,7 @@ class RatingBadge {
   }
 
   function getRatingClass(): int {
-    $rec = rating_group($this->rating, $this->isAdmin);
+    $rec = rating_group($this->rating, $this->user->isAdmin());
     return $rec['group'];
   }
 }

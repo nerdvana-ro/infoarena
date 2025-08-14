@@ -211,6 +211,20 @@ td.number, th.number, td.center, th.center, td.date, th.date, th.state {
   text-align: center;
 }
 
+/* inline lists */
+ul.inline-list {
+  list-style: none;
+  padding-inline-start: 0;
+}
+
+ul.inline-list li {
+  display: inline;
+}
+
+ul.inline-list li:not(:first-child)::before {
+  content: '• ';
+}
+
 /* Tag lists */
 ul.tag_list {
   list-style-type: none;

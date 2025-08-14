@@ -287,10 +287,22 @@ else if ('confirm' == $urlstart) {
 }
 
 // user profile, view personal page / statistics / rating evolution
-else if (Config::USER_TEXTBLOCK_PREFIX == $urlstart.'/' &&
-         ('view' == $action || 'rating' == $action || 'stats' == $action )) {
-    require_once Config::ROOT.'www/controllers/user.php';
-    controller_user_view($page_id, $action, request('revision'));
+else if (Config::USER_TEXTBLOCK_PREFIX == $urlstart . '/') {
+  require_once Config::ROOT . 'www/controllers/user.php';
+  switch ($action) {
+    case 'view':
+      $revision = Request::getInt('revision');
+      controller_user_view($page_id, $revision);
+      break;
+    case 'rating':
+      controller_user_view_rating($page_id);
+      break;
+    case 'stats':
+      controller_user_view_stats($page_id);
+      break;
+    default:
+      log_error('Invalid user profile action: ' . $action);
+  }
 }
 
 else if ($page == 'report/list') {

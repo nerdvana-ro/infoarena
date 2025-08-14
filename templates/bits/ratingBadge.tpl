@@ -2,7 +2,7 @@
 {if $rb}
   <a
     class="rating-badge-{$rb->getRatingClass()}"
-    href="{User::getRatingUrl($rb->getUsername())}"
+    href="{$rb->getUser()->getRatingUrl()}"
     title="Rating {$rb->getUsername()}: {$rb->getRating()}">
     &bull;
   </a>

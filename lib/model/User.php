@@ -2,6 +2,12 @@
 
 class User extends Base {
 
+  const SECURITY_LEVEL_NAMES = [
+    'admin' => 'Administrator',
+    'helper' => 'Helper',
+    'normal' => 'Utilizator normal',
+  ];
+
   public static $_table = 'ia_user';
   private static $avatarAttachment = null; // not yet loaded
   private static $avatarAttachmentLoaded = false;
@@ -64,30 +70,42 @@ class User extends Base {
   }
 
   static function getCurrentUserMonitorUrl(): string {
-    $username = Identity::getUsername();
-    return self::getMonitorUrl($username);
+    $user = Identity::get();
+    return $user
+      ? $user->getMonitorUrl()
+      : url_monitor();
   }
 
-  static function getMonitorUrl(string $username): string {
-    return $username
-      ? url_monitor([ 'user' => $username])
-      : url_monitor();
+  function getMonitorUrl(): string {
+    return url_monitor([ 'user' => $this->username]);
   }
 
   function getProfileUrl(): string {
     return url_user_profile($this->username);
   }
 
-  static function getRatingUrl(string $username): string {
-    return url_user_rating($username);
+  function getRatingUrl(): string {
+    return url_user_rating($this->username);
+  }
+
+  function getStatsUrl(): string {
+    return url_user_stats($this->username);
+  }
+
+  function getControlUrl(): string {
+    return url_user_control($this->id);
   }
 
   function getRatingBadge(): RatingBadge {
-    return new RatingBadge($this->username, $this->rating_cache);
+    return new RatingBadge($this, $this->rating_cache);
   }
 
   function isAdmin(): bool {
     return $this->security_level == 'admin';
+  }
+
+  function getSecurityLevelName(): string {
+    return self::SECURITY_LEVEL_NAMES[$this->security_level];
   }
 
   function isEditable(): bool {
@@ -121,6 +139,28 @@ class User extends Base {
     }
 
     return $query->find_many();
+  }
+
+  function getRatedRounds(): array {
+    return Model::factory('Round')
+      ->table_alias('rnd')
+      ->select('rnd.*')
+      ->join('ia_rating', [ 'rnd.id', '=', 'rat.round_id' ], 'rat')
+      ->where('rat.user_id', $this->id)
+      ->where('rnd.state', 'complete')
+      ->order_by_asc('rnd.start_time')
+      ->find_many();
+  }
+
+  function getSubmittedRounds(): array {
+    return Model::factory('Round')
+      ->table_alias('r')
+      ->select('r.*')
+      ->join('ia_score_user_round', [ 'r.id', '=', 'sur.round_id' ], 'sur')
+      ->where('sur.user_id', $this->id)
+      ->where_in('r.type', [ 'classic', 'penalty-round' ])
+      ->order_by_asc('r.start_time')
+      ->find_many();
   }
 
   static function countAll(): int {

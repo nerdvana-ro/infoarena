@@ -33,6 +33,18 @@ var {
   margin-bottom: 5px;
 }
 
+.hspace-1 {
+  margin-left: 5px;
+}
+
+.hspace-2 {
+  margin-left: 10px;
+}
+
+.hspace-3 {
+  margin-left: 15px;
+}
+
 /* Misc */
 a.feed {
   background: url(../images/feed-icon.gif) no-repeat center center;
@@ -912,13 +924,19 @@ div.normal-user .username {
   font-weight: bold;
 }
 
-
 div.normal-user img {
   background: #fff;
   border: 1px solid #D8D6CB;
   display: block;
   float: left;
   margin: 7px;
+}
+
+/* user profile page */
+
+.user-table td, .user-table th {
+  line-height: 2em;
+  padding: .2em;
 }
 
 /* monitor */
@@ -1228,6 +1246,14 @@ div.rejected-textile {
   color: red;
 }
 
+.text-center {
+  text-align: center;
+}
+
 .text-right {
   text-align: right;
+}
+
+.muted {
+  color: #777;
 }
