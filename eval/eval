@@ -21,6 +21,23 @@ require_once __DIR__ . '/../lib/Core.php';
 
 error_reporting(0xFFFF);
 
+// Must be less than MySQL's wait_timeout value.
+const SQL_SESSION_TIMEOUT = 7200; // seconds
+$connectedSince = time();
+
+// Resets the ORM connection periodically.
+function reconnect_if_needed() {
+  global $connectedSince;
+
+  $ts = time();
+  if ($ts - $connectedSince > SQL_SESSION_TIMEOUT) {
+    log_print('Reconnecting to database since more than ' . SQL_SESSION_TIMEOUT
+              . ' seconds have elapsed.');
+    ORM::reset_db();
+    $connectedSince = $ts;
+  }
+}
+
 // Send job result.
 function job_send_result(int $jobId, EvalResult $res): void {
   log_print("Sending result for job #{$jobId} ".
@@ -31,6 +48,8 @@ function job_send_result(int $jobId, EvalResult $res): void {
 
 // This function handles a certain job.
 function job_handle($job) {
+  reconnect_if_needed();
+
   $job = Job::get_by_id($job['id']);
   $job->status = 'processing';
   $job->save();
@@ -130,22 +149,6 @@ function eval_main_loop() {
     }
     usleep(Config::EVAL_POLL_INTERVAL * 1_000_000);
   }
-}
-
-// Parse options. FIXME: php's built-in getopt is dumb
-$options = getopt("dl:");
-
-if (array_key_exists('d', $options)) {
-  // Run in daemon mode. Fork to background, pid to eval.pid
-  if ($pid = pcntl_fork()) {
-    die();
-  }
-  file_put_contents(Config::ROOT . 'eval/eval.pid', getmypid() . "\n");
-}
-
-// FIXME: Is there a better way to redirect output? No freopen in php.
-if (array_key_exists('l', $options)) {
-  ini_set('error_log', $options['l']);
 }
 
 eval_main_loop();
