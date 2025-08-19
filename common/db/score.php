@@ -111,51 +111,6 @@ function score_get_count($user, $task, $round) {
     return $res['cnt'];
 }
 
-// Return rating history for given user_id (not username).
-// Output array format is:
-//  array(
-//      round_id =>
-//          array(
-//              rating => (int)
-//              deviation => (int)
-//              timestamp => (int UNIX timestamp)
-//              round_page_name => (string)
-//              round_title => (string)
-//          ),
-//      ...
-//  );
-// Rounds are ordered in chronological order.
-function rating_history($user_id) {
-    log_assert(is_whole_number($user_id));
-
-    // get round list, chronologically ordered
-    $history = rating_rounds();
-
-    // get user scores
-    $query = sprintf("SELECT * FROM `ia_rating`
-                      LEFT JOIN ia_round ON round_id = ia_round.id
-                      WHERE ia_rating.user_id = '%s'
-                            AND ia_round.state = 'complete'
-                     ", db_escape($user_id));
-    $rows = db_fetch_all($query);
-
-    foreach ($rows as $row) {
-        $round_id = $row['round_id'];
-        $history[$round_id]['rating'] = $row['rating'];
-        $history[$round_id]['deviation'] = $row['deviation'];
-    }
-
-    // filter out rows which user has not participated in
-    foreach (array_keys($history) as $round_id) {
-        if (!isset($history[$round_id]['rating'])) {
-            unset($history[$round_id]);
-        }
-    }
-
-    // pretty much done
-    return $history;
-}
-
 // Returns all completed, rated rounds whose ratings have not yet been
 // applied.
 function applicable_rating_rounds() {

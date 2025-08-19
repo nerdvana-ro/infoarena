@@ -51,16 +51,24 @@ $urlstart = getattr($pagepath, 0, '');
 $page_id = implode('/', array_slice($pagepath, 1));
 $action = request('action', 'view');
 
-// Direct mapping list
-// Note: array_flip() flips keys with values in a dictionary.
-// FIXME: change this to Romanian!
-$directmaps = array_flip(array('register', 'changes',
-                               'login', 'logout', 'json', 'job_detail',
-                               'monitor', 'submit', 'userinfo',
-                               'search', 'job_skip', 'resetpass', 'reeval',
-                               'userwidget', 'statistici_problema',
-                               'penalty_edit', 'user_control',
-));
+$directmaps = [
+  'changes',
+  'job_detail',
+  'job_skip',
+  'json',
+  'login',
+  'logout',
+  'monitor',
+  'penalty_edit',
+  'reeval',
+  'register',
+  'resetpass',
+  'search',
+  'statistici_problema',
+  'submit',
+  'user_control',
+  'userwidget',
+];
 
 //
 // Here comes the big url mapper.
@@ -68,7 +76,7 @@ $directmaps = array_flip(array('register', 'changes',
 //
 
 // Trivial direct mappings
-if (isset($directmaps[$urlstart])) {
+if (in_array($urlstart, $directmaps)) {
     require_once Config::ROOT . "www/controllers/{$urlstart}.php";
     $fname = "controller_{$urlstart}";
     $fname($page_id);
