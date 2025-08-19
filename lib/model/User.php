@@ -5,6 +5,7 @@ class User extends Base {
   const SECURITY_LEVEL_NAMES = [
     'admin' => 'Administrator',
     'helper' => 'Helper',
+    'intern' => 'Intern',
     'normal' => 'Utilizator normal',
   ];
 
