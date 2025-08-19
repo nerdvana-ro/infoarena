@@ -172,6 +172,10 @@ abstract class FunctionalTest {
     return $this->getElement(WebDriverBy::xpath($xpath));
   }
 
+  protected function getElementsByXpath(string $xpath): array {
+    return $this->getElements(WebDriverBy::xpath($xpath));
+  }
+
   protected function getHiddenElementText(string $cssSelector): string {
     // Necessary because getText() returns '' for hidden elements.
     $elem = $this->getElementByCss($cssSelector);

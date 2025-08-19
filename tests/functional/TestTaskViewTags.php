@@ -10,8 +10,13 @@ class TestTaskViewTags extends FunctionalTest {
     $this->ensureLoggedOut();
     $this->visitTaskPage('task1');
     $this->clickLinkByText('Arată 2 categorii');
-    $this->clickLinkByText('1 etichete');
-    $this->clickLinkByText('1 etichete');
+    // FIXME: Ugly.
+    $this->waitForElementByCss('ul.hidden[style="display: block;"]');
+    $elems = $this->getElementsByXpath('//a[normalize-space()="1 etichete"]');
+    foreach ($elems as $elem) {
+      $elem->click();
+    }
+
     $this->assertTextExists('category1');
     $this->assertTextExists('category2');
     $this->assertTextExists('tag1');
