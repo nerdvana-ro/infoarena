@@ -125,6 +125,7 @@ class ClassicJudge {
   }
 
   private function downloadOkFile(int $testNo): void {
+    // Some tasks, e.g. Submultimi1, have no .ok files.
     if (!$this->task->use_ok_files) {
       return;
     }
@@ -157,6 +158,24 @@ class ClassicJudge {
         // Don't make a fuss. In particular, the output file may not exist in
         // all non-success cases (TLE, MLE etc.).
       }
+    }
+  }
+
+  private function copyGraderInputFiles(IsolateJail $iso, int $testNo): void {
+    if (Config::EVAL_GRADER_NEEDS_SOURCE) {
+      $dest = $this->task->id . '.' . $this->getUserExtension();
+      $iso->pushFile($this->getUserSrc(), $dest);
+    }
+
+    $iso->pushFile($this->getGraderBin());
+    $iso->pushFile(EvalDownloader::getTestIn($this->task, $testNo), $this->task->id . '.in');
+    if ($this->task->use_ok_files) {
+      $iso->pushFile(EvalDownloader::getTestOk($this->task, $testNo), $this->task->id . '.ok');
+    }
+    $dir = $this->getTestSaveDir($testNo);
+    $outFile = $dir . $this->task->id . '.out';
+    if (file_exists($outFile)) {
+      $iso->pushFile($outFile);
     }
   }
 
@@ -214,22 +233,9 @@ class ClassicJudge {
   // $res = result from the user binary isolate box.
   private function runCustomGrader(int $testNo, IsolateResult $res): EvalTestResult {
     $iso = new IsolateJail();
-
-    if (Config::EVAL_GRADER_NEEDS_SOURCE) {
-      $dest = $this->task->id . '.' . $this->getUserExtension();
-      $iso->pushFile($this->getUserSrc(), $dest);
-    }
-
-    $iso->pushFile($this->getGraderBin());
-    $iso->pushFile(EvalDownloader::getTestIn($this->task, $testNo), $this->task->id . '.in');
-    $iso->pushFile(EvalDownloader::getTestOk($this->task, $testNo), $this->task->id . '.ok');
-    $dir = $this->getTestSaveDir($testNo);
-    $outFile = $dir . $this->task->id . '.out';
-    if (file_exists($outFile)) {
-      $iso->pushFile($outFile);
-    }
     $iso->setTimeLimit(Config::EVAL_GRADER_TIME_LIMIT);
     $iso->setMemoryLimit(Config::EVAL_GRADER_MEMORY_LIMIT);
+    $this->copyGraderInputFiles($iso, $testNo);
     $gres = $iso->run('./grader', '', [], []);
 
     if (!$gres->success()) {
