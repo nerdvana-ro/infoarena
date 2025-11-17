@@ -133,6 +133,11 @@ class Config {
   // How many times to retry fetching files from the server.
   const EVAL_DOWNLOAD_RETRIES = 5;
 
+  // Give programs some extra memory for page cache so they can read the input
+  // files. IsolateJail will find the page cache memory used and subtract it
+  // from the reported usage.
+  const EVAL_PAGE_CACHE_MEMORY = 4 * 1024; // 4 MB
+
   // Limits for compiler processes, in seconds / kilobytes.
   const EVAL_COMPILE_TIME_LIMIT = 15.0;
   const EVAL_COMPILE_MEMORY_LIMIT = 1024 * 1024; // 1 GiB

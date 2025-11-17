@@ -194,6 +194,7 @@ class ClassicJudge {
     $iso->setTimeLimit($this->task->getTimeLimit());
 
     $memLimit = $this->task->getMemoryLimit();
+    $memLimit += Config::EVAL_PAGE_CACHE_MEMORY;
     if ($this->extraMemory) {
       $memLimit += 1024; // 1 MB
     }
