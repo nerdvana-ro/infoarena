@@ -84,10 +84,13 @@ class IsolateJail {
 
   function getResult(): IsolateResult {
     $meta = $this->getMeta();
+    $pageCacheSize = Cgroups::getPageCacheSize();
 
     $exitCode = $meta['exitcode'] ?? 0;
     $signal = $meta['exitsig'] ?? 0;
     $memory = $meta['cg-mem'] ?? 0;
+    log_print("Memory: {$memory} kb of which {$pageCacheSize} kb page cache.");
+    $memory = max($memory - $pageCacheSize, 0);
     $time = $meta['time'] ?? 0;
     $wallTime = $meta['time-wall'] ?? 0;
 

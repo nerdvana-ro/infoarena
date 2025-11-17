@@ -113,6 +113,7 @@ class Config {
   const ISOLATE_EXTRA_WALL_TIME_SEC = 0.5;
   const ISOLATE_STDOUT = 'isolate-stdout';
   const ISOLATE_STDERR = 'isolate-stderr';
+  const CGROUP_MEMORY_STAT_FILE = '/sys/fs/cgroup/isolate/box-0/memory.stat';
 
   /**
    * Settings for the eval system.
