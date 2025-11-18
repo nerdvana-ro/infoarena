@@ -125,6 +125,7 @@ class IsolateJail {
 
     $time = number_format($this->timeLimit, 3); // sprintf is locale-aware and uses ','
     $wallTime = number_format($this->wallTimeLimit, 3);
+    $memory = $this->memoryLimit + Config::ISOLATE_PAGE_CACHE_MEMORY;
 
     $args = [
       '--cg',
@@ -134,7 +135,7 @@ class IsolateJail {
       '--dir /box=./box:rw',
       '-t ' . $time,
       '-w ' . $wallTime,
-      '--cg-mem ' . $this->memoryLimit,
+      '--cg-mem ' . $memory,
       '-M ' . Config::ISOLATE_META_FILE,
       '-o ' . Config::ISOLATE_STDOUT,
       '-r ' . Config::ISOLATE_STDERR,

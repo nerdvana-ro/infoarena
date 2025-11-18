@@ -111,6 +111,10 @@ class Config {
   const ISOLATE_BOX = '/var/local/lib/isolate/0/box/';
   const ISOLATE_META_FILE = self::ISOLATE_BOX . 'meta';
   const ISOLATE_EXTRA_WALL_TIME_SEC = 0.5;
+  // Give programs some extra memory for page cache so they can read the input
+  // files. IsolateJail will find the page cache memory used and subtract it
+  // from the reported usage.
+  const ISOLATE_PAGE_CACHE_MEMORY = 4 * 1024; // 4 MB
   const ISOLATE_STDOUT = 'isolate-stdout';
   const ISOLATE_STDERR = 'isolate-stderr';
   const CGROUP_MEMORY_STAT_FILE = '/sys/fs/cgroup/isolate/box-0/memory.stat';
@@ -132,11 +136,6 @@ class Config {
 
   // How many times to retry fetching files from the server.
   const EVAL_DOWNLOAD_RETRIES = 5;
-
-  // Give programs some extra memory for page cache so they can read the input
-  // files. IsolateJail will find the page cache memory used and subtract it
-  // from the reported usage.
-  const EVAL_PAGE_CACHE_MEMORY = 4 * 1024; // 4 MB
 
   // Limits for compiler processes, in seconds / kilobytes.
   const EVAL_COMPILE_TIME_LIMIT = 15.0;
