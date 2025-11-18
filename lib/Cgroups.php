@@ -1,9 +1,9 @@
 <?php
 
 class Cgroups {
-  // Poll for 5 seconds total.
+  // Poll for 3 seconds total.
   const int POLL_MILLIS = 50;
-  const int POLL_TIMEOUT = 5_000;
+  const int POLL_TIMEOUT = 3_000;
 
   static function getKey(string $file, string $key): int {
     $lines = file($file);
