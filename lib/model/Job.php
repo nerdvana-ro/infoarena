@@ -170,6 +170,11 @@ class Job extends Base {
       return self::SOURCE_VISIBILITY_NO;
     }
 
+    $round = $this->getRound();
+    if (!$round || !$round->isArchive()) {
+      return self::SOURCE_VISIBILITY_NO;
+    }
+
     if ($task->open_source) {
       return self::SOURCE_VISIBILITY_YES;
     }
