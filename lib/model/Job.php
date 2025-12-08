@@ -147,6 +147,14 @@ class Job extends Base {
   }
 
   private function computeSourceVisibility(): int {
+    if (Identity::isAnonymous()) {
+      return self::SOURCE_VISIBILITY_NO;
+    }
+
+    if (Identity::isAdmin()) {
+      return self::SOURCE_VISIBILITY_YES;
+    }
+
     if (Identity::getId() == $this->user_id) {
       return self::SOURCE_VISIBILITY_YES;
     }
@@ -176,10 +184,6 @@ class Job extends Base {
     }
 
     $me = Identity::get();
-    if (!$me) {
-      return self::SOURCE_VISIBILITY_NO;
-    }
-
     if ($me->hasSolvedTask($task)) {
       return self::SOURCE_VISIBILITY_YES;
     }
