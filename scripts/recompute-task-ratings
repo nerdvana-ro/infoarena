@@ -1,14 +1,15 @@
 #! /usr/bin/env php
 <?php
-require_once(dirname($argv[0]) . "/utilities.php");
-require_once(Config::ROOT . "common/db/task_rating.php");
+
+require_once __DIR__ . '/../Config.php';
+require_once __DIR__ . '/../lib/Core.php';
+require_once __DIR__ . '/../common/db/task_rating.php';
 
 db_connect();
 
-$query = "SELECT DISTINCT task_id FROM ia_task_ratings";
+$query = 'select id from ia_task';
 
 $results = db_fetch_all($query);
 foreach ($results as $row) {
-    task_rating_update($row['task_id']);
+  task_rating_update($row['id']);
 }
-?>
