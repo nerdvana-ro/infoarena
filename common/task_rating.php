@@ -46,7 +46,7 @@ function task_is_rating_value($rating_value) {
     }
 
     $int_rating_value = intval($rating_value);
-    if ($int_rating_value < 1 || $int_rating_value > 7) {
+    if ($int_rating_value < 1 || $int_rating_value > TaskRatings::MAX_VALUE) {
         return false;
     }
 
