@@ -271,16 +271,10 @@ function controller_task_delete($task_id) {
 
 // Edit ratings for a task
 function controller_task_ratings($task_id) {
-  // Validate task id
-  if (!is_task_id($task_id)) {
-    FlashMessage::addError("Problemă inexistentă.");
-    Util::redirectToHome();
-  }
-
   // Get task
   $task = Task::get_by_id($task_id);
   if (!$task) {
-    falsh_error("Problemă inexistentă.");
+    FlashMessage::addError("Problemă inexistentă.");
     Util::redirectToHome();
   }
 
@@ -311,7 +305,7 @@ function controller_task_ratings($task_id) {
     redirect(url_task_edit($task_id, 'task-edit-ratings'));
   }
 
-  $ratings = task_rating_get($task_id, $user_id);
+  $ratings = task_rating_get($task_id);
 
   $view = array();
   $view['title'] = "Editează ratingurile pentru problema " . $task->title;

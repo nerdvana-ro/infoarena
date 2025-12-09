@@ -208,7 +208,7 @@ class Task extends Base {
   }
 
   function areRatingsEditable(): bool {
-    return Identity::ownsTask($this);
+    return Identity::isAdmin();
   }
 
   function areTagsEditable(): bool {

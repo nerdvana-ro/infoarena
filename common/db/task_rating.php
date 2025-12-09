@@ -13,13 +13,12 @@ function task_rating_get_all($task_id) {
 }
 
 // Returns an array with ratings given by $user_id to $task_id
-function task_rating_get($task_id, $user_id) {
+function task_rating_get($task_id) {
     log_assert(is_task_id($task_id));
-    log_assert(is_user_id($user_id));
 
     $query = sprintf("SELECT idea, theory, coding FROM ia_task_ratings
-                      WHERE task_id = %s AND user_id = %s",
-                      db_quote($task_id), db_quote($user_id));
+                      WHERE task_id = %s",
+                     db_quote($task_id));
 
     $result = db_fetch($query);
 
@@ -60,8 +59,7 @@ function task_rating_add($task_id, $user_id, $ratings) {
         'coding' => $ratings['coding']
     );
 
-    $where = "task_id = " . db_quote($task_id) . " AND user_id = " .
-                db_quote($user_id);
+    $where = "task_id = " . db_quote($task_id);
 
 
     if (!db_query_value("SELECT COUNT(*) FROM ia_task_ratings WHERE $where")) {
