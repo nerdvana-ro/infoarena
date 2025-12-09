@@ -3,13 +3,15 @@
 
 require_once __DIR__ . '/../Config.php';
 require_once __DIR__ . '/../lib/Core.php';
-require_once __DIR__ . '/../common/db/task_rating.php';
 
-db_connect();
+$tasks = Model::factory('Task')->find_many();
 
-$query = 'select id from ia_task';
-
-$results = db_fetch_all($query);
-foreach ($results as $row) {
-  task_rating_update($row['id']);
+foreach ($tasks as $task) {
+  $tr = TaskRatings::getForTask($task->id);
+  if ($tr) {
+    $task->rating = $tr->getStarRating();
+  } else {
+    $task->rating = 0.0;
+  }
+  $task->save();
 }

@@ -12,6 +12,13 @@ class Task extends Base {
     }
   }
 
+  function getTaskRatings(): array {
+    $arr = Model::factory('TaskRatings')
+      ->where('task_id', $this->id)
+      ->find_array();
+    return count($arr) ? $arr[0] : [];
+  }
+
   function getMethodsAndAlgorithms(): array {
     $methods = $this->getTags('method');
     $algorithms = $this->getTags('algorithm');

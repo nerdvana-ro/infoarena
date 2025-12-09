@@ -3,7 +3,6 @@
 require_once(Config::ROOT . "common/db/task.php");
 require_once(Config::ROOT . "common/task.php");
 require_once(Config::ROOT . "common/tags.php");
-require_once(Config::ROOT . "common/task_rating.php");
 
 // Displays form to either create a new task or edit an existing one.
 // This form does not edit task content (its associated textblock)
@@ -291,7 +290,7 @@ function controller_task_ratings($task_id) {
     foreach ($rating_fields as $rating_field) {
       $rating_value = request($rating_field);
 
-      if (!task_is_rating_value($rating_value)) {
+      if (!TaskRatings::isRatingValue($rating_value)) {
         FlashMessage::addError("Datele introduse nu sunt valide.");
         redirect(url_task_edit($task_id, 'task-edit-ratings'));
       }
@@ -299,13 +298,13 @@ function controller_task_ratings($task_id) {
       $ratings[$rating_field] = $rating_value;
     }
 
-    task_rating_add($task_id, $user_id, $ratings);
+    TaskRatings::saveRatings($task_id, $user_id, $ratings);
 
     FlashMessage::addSuccess("Am salvat ratingurile.");
     redirect(url_task_edit($task_id, 'task-edit-ratings'));
   }
 
-  $ratings = task_rating_get($task_id);
+  $ratings = $task->getTaskRatings();
 
   $view = array();
   $view['title'] = "Editează ratingurile pentru problema " . $task->title;
