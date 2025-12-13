@@ -6,11 +6,19 @@ class EvalResult {
   public string $log = '';
   public array $testResults = [];
 
-  function setPending() {
+  function setPending(): void {
     $this->message = 'Evaluare incompletă';
   }
 
-  function setComplete() {
+  function setComplete(): void {
     $this->message = 'Evaluare completă';
+  }
+
+  function getMaxTime(): int {
+    return max(array_column($this->testResults, 'time'));
+  }
+
+  function getMaxMemory(): int {
+    return max(array_column($this->testResults, 'memory'));
   }
 }

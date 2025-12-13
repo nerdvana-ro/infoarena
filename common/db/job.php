@@ -68,7 +68,8 @@ SQL;
 // Update job status.
 // Null parameters doesn't update.
 function job_update($job_id, $status = null,  $eval_message = null,
-                    $eval_log = null, $score = null) {
+                    $eval_log = null, $score = null, $max_time = null,
+                    $max_memory = null) {
     log_assert(is_whole_number($job_id));
 
     // Build set statements.
@@ -88,6 +89,12 @@ function job_update($job_id, $status = null,  $eval_message = null,
     }
     if ($score !== null) {
         $set_statements[] = "`score` = '".db_escape($score)."'";
+    }
+    if ($max_time !== null) {
+        $set_statements[] = "`max_time` = '".db_escape($max_time)."'";
+    }
+    if ($max_memory !== null) {
+        $set_statements[] = "`max_memory` = '".db_escape($max_memory)."'";
     }
     $query = sprintf("UPDATE ia_job SET %s WHERE id = %s",
             implode(', ', $set_statements), $job_id);

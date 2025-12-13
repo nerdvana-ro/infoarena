@@ -30,7 +30,7 @@ var {
 }
 
 .vspace-1 {
-  margin-bottom: 5px;
+  margin-bottom: 5px !important;
 }
 
 .hspace-1 {

@@ -94,7 +94,6 @@ function delete_user(array $user, array $target) {
     $FOREIGN_DATA = [
         'ia_rating',
         'ia_task_users_solved',
-        'ia_score_task_top_users',
         'ia_score_user_round',
         'ia_score_user_round_task',
         'ia_user_round',

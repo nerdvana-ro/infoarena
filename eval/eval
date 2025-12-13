@@ -43,7 +43,8 @@ function job_send_result(int $jobId, EvalResult $res): void {
   log_print("Sending result for job #{$jobId} ".
             "score {$res->score} message {$res->message}");
   log_print("");
-  job_update($jobId, 'done', $res->message, $res->log, $res->score);
+  job_update($jobId, 'done', $res->message, $res->log, $res->score,
+             $res->getMaxTime(), $res->getMaxMemory());
 }
 
 // This function handles a certain job.
@@ -105,17 +106,6 @@ function job_handle($job) {
     $job->round_id
   );
 
-  $file_size = strlen($job->file_contents);
-  task_statistics_update_top_users(
-    $job->user_id,
-    $job->task_id,
-    $job->round_id,
-    $evalResult->score,
-    $job->submit_time,
-    $job->id,
-    $file_size,
-    $evalResult->testResults
-  );
   task_update_solved_by(
     $job->task_id,
     $job->user_id
@@ -152,5 +142,3 @@ function eval_main_loop() {
 }
 
 eval_main_loop();
-
-?>

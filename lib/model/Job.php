@@ -228,10 +228,6 @@ class Job extends Base {
       ->where('job_id', $this->id)
       ->delete_many();
 
-    Model::factory('TaskTop')
-      ->where('job_id', $this->id)
-      ->delete_many();
-
     parent::delete();
   }
 
