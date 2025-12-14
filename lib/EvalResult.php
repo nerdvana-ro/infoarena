@@ -15,10 +15,14 @@ class EvalResult {
   }
 
   function getMaxTime(): int {
-    return max(array_column($this->testResults, 'time'));
+    return count($this->testResults)
+      ? max(array_column($this->testResults, 'time'))
+      : 0;
   }
 
   function getMaxMemory(): int {
-    return max(array_column($this->testResults, 'memory'));
+    return count($this->testResults)
+      ? max(array_column($this->testResults, 'memory'))
+      : 0;
   }
 }
