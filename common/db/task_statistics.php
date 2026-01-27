@@ -14,9 +14,12 @@ function task_statistics_get_average_wrong_submissions($task_id) {
 }
 
 // Returns the number of incorrect submissions of $user_id for $task_id.
+// Using SUM() because db_query_value() crashes if it finds more than 1 row.
+// This happens when a user has submits in multiple rounds for the same task.
+// Added COALESCE so we get a clean 0 instead of NULL if there's no data.
 function task_statistics_get_user_wrong_submissions($task_id, $user_id) {
     $query = sprintf("
-        SELECT `incorrect_submits`
+        SELECT COALESCE(SUM(`incorrect_submits`), 0)
         FROM `ia_score_user_round_task`
         WHERE `task_id` = '%s'
         AND `user_id` = %d
