@@ -45,7 +45,7 @@ class Config {
 
   // Logging and error settings.
   const ERROR_REPORTING = E_ALL & ~E_USER_NOTICE;
-  const FATAL_ERROR_MASK = E_ALL & ~E_USER_NOTICE & ~E_USER_WARNING;
+  const FATAL_ERROR_MASK = E_ALL & ~E_USER_NOTICE & ~E_USER_WARNING & ~E_DEPRECATED & ~E_USER_DEPRECATED;
   const LOG_SECURITY = false;
   const LOG_DISK_CACHE = false;
   const LOG_SQL_QUERIES = false;
