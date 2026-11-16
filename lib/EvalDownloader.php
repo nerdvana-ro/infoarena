@@ -49,7 +49,7 @@ class EvalDownloader {
       log_warn('Curl says: ' . curl_error($curl));
       return false;
     }
-    curl_close($curl);
+
     if (!fclose($cachefd)) {
       log_warn("Failed closing $full");
       return false;
