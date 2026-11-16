@@ -43,7 +43,6 @@ function get_mime_type($filename) {
                    'fileinfo is active but finfo_open() failed');
 
         $res = finfo_file($finfo, $filename);
-        finfo_close($finfo);
         return $res;
     }
     if (function_exists("mime_content_type")) {

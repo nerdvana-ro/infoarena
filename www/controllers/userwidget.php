@@ -61,7 +61,6 @@ function create_and_print_image(array $rgb, array $messages): void {
   imagecolordeallocate($img, $line_color);
   imagecolordeallocate($img, $fg_color);
   imagecolordeallocate($img, $bg_color);
-  imagedestroy($img);
 }
 
 function split_color(string $hex): array {
